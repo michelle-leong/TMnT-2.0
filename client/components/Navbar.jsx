@@ -20,16 +20,8 @@ const Navbar = () => {
           Home
         </NavItem>
         <input type="text" name="input-box" />
-        <NavItem
-          link="/"
-          activeLink={activeLink}
-          handleLinkClick={handleLinkClick}
-        >
-          Profile
-        </NavItem>
-        
+       
         <NavItem>
-          table
           <DropdownMenu>
             <DropdownItem link="/table1">Table 1</DropdownItem>
             <DropdownItem link="/table2">Table 2</DropdownItem>
@@ -79,13 +71,42 @@ const NavItem = ({ link, activeLink, handleLinkClick, children }) => {
 function DropdownMenu(props) {
   const [open, setOpen] = useState(false);
 
+  const handleCreateBoard = () => {
+    fetch('/board/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        // include any data you need to send with the request
+      })
+    })
+      .then(response => response.json())
+      .then(data => {
+        // handle the response data here
+        console.log(data);
+      })
+      .catch(error => {
+        // handle errors here
+        console.error(error);
+      });
+  };
+
+  const handleMenuClick = (event) => {
+    event.preventDefault();
+    setOpen(!open);
+  };
+
+
   return (
     <div className="dropdown">
-      <a href="#" onClick={() => setOpen(!open)}>
-      </a>
+      <a href="#" onClick={() => setOpen(!open)}>Profile</a>
       {open && (
         <ul className="dropdown-menu">
           {props.children}
+          <li>
+            <button onClick={handleCreateBoard}>Create new board</button>
+          </li>
           <li>
             <button className="logOut" onClick={() => props.setLogin(false)}>
               LOG OUT
@@ -96,6 +117,8 @@ function DropdownMenu(props) {
     </div>
   );
 }
+
+
 
 
 
