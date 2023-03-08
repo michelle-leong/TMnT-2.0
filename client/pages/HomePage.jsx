@@ -104,10 +104,7 @@ function HomePage({user, isLoggedIn, setLogin}) {
               : (<></>)
             }
           </div>
-            <Board />
-          <div>
-            <button className="addColumn" onClick={() => setShowColumnModal(true)}>ADD COLUMN</button>
-          </div>
+          <Board />
         </div>
       </div>
   );
@@ -115,3 +112,12 @@ function HomePage({user, isLoggedIn, setLogin}) {
 }
 
 export default HomePage;
+
+// navbar
+  // user id from cookie
+  // axios getAllBoardsByUserID => []
+  // buttons display name of board
+    // button gets by board by id
+
+// homepage displays the board from the navbar onclick = board_id
+  // axios get request by board_id => boardObj{}
