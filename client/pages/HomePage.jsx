@@ -104,10 +104,7 @@ function HomePage({user, isLoggedIn, setLogin}) {
               : (<></>)
             }
           </div>
-            <Board />
-          <div>
-            <button className="addColumn" onClick={() => setShowColumnModal(true)}>ADD COLUMN</button>
-          </div>
+          <Board />
         </div>
       </div>
   );
