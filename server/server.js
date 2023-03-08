@@ -3,6 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const UserRouter = require('./routes/UserRouter');
 const BoardRouter = require('./routes/BoardRouter');
+const ColumnRouter = require('./routes/ColumnRouter');
+const CardRouter = require('./routes/CardRouter');
 
 const userController = require('./controllers/userController');
 const sessionController = require('./controllers/sessionController');
@@ -26,10 +28,10 @@ app.use(cors());
 app.use('/build', express.static(path.resolve(__dirname, '../build')));
 
 // route handlers
-// app.use('/users', UserRouter);
+app.use('/users', UserRouter);
 app.use('/boards', BoardRouter);
-// app.use('/columns');
-// app.use('/cards');
+app.use('/columns', ColumnRouter);
+app.use('/cards', CardRouter);
 
 // post cookie to check if user is logged in to send boards as res
 // app.post(
