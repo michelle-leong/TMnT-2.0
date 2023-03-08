@@ -1,34 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
-const NavItem = (props) => {
-  const [open, setOpen] = useState(false);
-
-
+const NavItem = ({ icon, link, activeLink, handleLinkClick, children }) => {
   return (
-    <li>className="nav-item" 
-      <a href="#" className="icon-button" onClick={() => setOpen(!open)} >
-        {props.icon}
-      </a>
-
-      {open && props.children}
+    <li className="nav-item">
+      <Link
+        to={link}
+        onClick={() => handleLinkClick(link)}
+        className={activeLink === link ? 'active' : ''}
+      >
+        {icon}
+        {children}
+      </Link>
     </li>
-  )
-}
-
-function DropdownMenu() {
-
-  function DropdownItem() {
-    return {
-      <a > 
-      
-      </a>
-    }
-  }
-  return (
-    <div className='dropdown'>
-      
-    </div>
   );
 }
 
