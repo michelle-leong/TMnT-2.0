@@ -22,8 +22,22 @@ const dummyCardArray = [dummyCard, dummyCard1];
 
 // _id might cause a failure
 function Column ({ column }) {
+
   const { _id, name } = column;
-  console.log(dummyCardArray);
+
+  const handleDelete = () => {
+    console.log('axios deleted Column');
+  }
+  
+  const handleAdd = () => {
+    console.log('axios add card');
+  }
+
+  // open up add card modal form
+  const toggle = () => {
+    console.log('toggled Add Card Modal');
+  }
+
   // render array of card objects prop drilling card info
   const renderCards = dummyCardArray.map((cardObj) => (
     <Card key={cardObj._id} card={cardObj}/>
@@ -35,7 +49,10 @@ function Column ({ column }) {
       <div className='cardCont'>
         {renderCards}
       </div>
-    <button >ADD CARD</button>
+      <div className="modal-button-cont">
+        <button className="btn" onClick={toggle}>Add Card</button>
+        <button className="btn" onClick={handleDelete}>Delete Column</button>
+      </div>
     </div>
   );
 }

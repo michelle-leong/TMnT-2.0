@@ -14,27 +14,30 @@ const dummyCol1 = {
 };
 const dummyColArray = [dummyCol, dummyCol1];
 
-// board should get all cols
-  // cols should get all its cards
-    // cards fill out with all their data
-
-// delete board -> delete all columns (single query)
-// delete column ->  delete all associated cards  (single query)
-
 // get all columns expecting an array[] of column objects
 // expecting board object with all the id and name properties
-
 function Board () {
+
+  const handleDelete = () => {
+    console.log('axios deleted Board');
+  }
+
+  // open up add Column modal form
+  const toggle = () => {
+    console.log('toggled Add Column Modal');
+  }
+
   // render array of column objects prop drilling column info
   const renderColumns = dummyColArray.map((columnObj) => (
     <Column key={columnObj._id} column={columnObj}/>
   ));
-
+  
+  // TODO board DELETE button
   return (
     <div className="column-container">
       {renderColumns}
       <div>
-        <button className="addColumn">ADD COLUMN</button>
+        <button className="addColumn" onClick={toggle}>ADD COLUMN</button>
       </div>
     </div>
   )
@@ -42,3 +45,10 @@ function Board () {
 
 //  onClick={() => setShowColumnModal(true)}
 export default Board;
+
+// board should get all cols
+  // cols should get all its cards
+    // cards fill out with all their data
+
+// delete board -> delete all columns (single query)
+// delete column ->  delete all associated cards  (single query)
