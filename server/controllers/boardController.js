@@ -11,7 +11,7 @@ boardController.createBoard = async (req, res, next) => {
     const boardName = req.body.name; //or req.params.board
     const queryString = `INSERT INTO boards (name) VALUES ('${boardName}') RETURNING *`;
     const response = await pool.query(queryString);
-    res.locals.board = response.rows;
+    res.locals.board = response.rows[0];
     return next();
   } catch (err) {
     return next({
@@ -29,9 +29,10 @@ boardController.updateBoard = async (req, res, next) => {
     const boardName = req.body.name; // or req.params.board
     console.log('boardId', boardId, 'boardName', boardName);
     // UPDATE table_name SET column1 = value1, column2 = value2 WHERE condition;
-    const queryString = `UPDATE boards SET name = '${boardName}' WHERE _id = ${boardId}`;
-    await pool.query(queryString);
+    const queryString = `UPDATE boards SET name = '${boardName}' WHERE _id = ${boardId} RETURNING *`;
+    const updatedBoard = await pool.query(queryString);
     console.log(`table id ${boardId} updated`);
+    res.locals.updatedBoard = updatedBoard.rows[0];
     return next();
   } catch (err) {
     return next({
@@ -75,14 +76,23 @@ boardController.joinUsernBoard = async (req, res, next) => {
   }
 };
 
-//update to make it get all information for that specific board
-boardController.getBoards = async (req, res, next) => {
-  console.log('running boardController.getBoard. res.locals: ', res.locals);
-
+//_id in object is the board _id;
+boardController.getBoard = async (req, res, next) => {
   try {
-    const queryString = `SELECT * FROM boards`;
+    const id = req.params.id;
+    const queryString = `SELECT 
+    boards._id AS board_id,
+    boards.name AS board_name,
+    columns._id AS column_id,
+    columns.name AS column_name,
+    cards._id AS card_id,
+    cards.task AS cards_task FROM cards
+    INNER JOIN columns ON column_id = columns._id
+    INNER JOIN boards on board_id = boards._id
+    WHERE board_id = ${id}
+    ORDER BY column_id, card_id `;
     const response = await pool.query(queryString);
-    res.locals.allBoards = response.rows;
+    res.locals.board = response.rows;
     return next();
   } catch (err) {
     return next({

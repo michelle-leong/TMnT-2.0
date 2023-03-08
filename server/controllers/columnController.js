@@ -8,7 +8,7 @@ columnController.addColumn = async (req, res, next) => {
     const columnName = req.body.name;
     const queryString = `INSERT INTO columns (name, board_id) VALUES ('${columnName}', ${boardId}) RETURNING *`;
     const response = await pool.query(queryString);
-    res.locals.column = response.rows;
+    res.locals.column = response.rows[0];
     return next();
   } catch (err) {
     return next({
@@ -24,7 +24,7 @@ columnController.updateColumn = async (req, res, next) => {
     const queryString = `UPDATE columns SET name = '${columnName}' where _id = ${columnId} RETURNING *`;
     const response = await pool.query(queryString);
     console.log(`column id ${columnId} is updated`);
-    res.locals.columnUpdate = response.rows;
+    res.locals.columnUpdate = response.rows[0];
     return next();
   } catch (err) {
     return next({

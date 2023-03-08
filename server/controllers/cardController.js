@@ -9,14 +9,12 @@ const cardController = {};
 
 cardController.createCard = async (req, res, next) => {
   try {
-    const columnId = req.body.id;
-    const task = req.body.task;
+    const { task, columnId } = req.body;
     const queryString = `INSERT INTO cards (task, column_id) 
     VALUES ('${task}', ${columnId}) RETURNING *`;
     const cardCreated = await pool.query(queryString);
-    // TODO: check cardCreated's value
-    console.log(cardCreated.rows);
-    res.locals.cardCreated = cardCreated.rows;
+    console.log(cardCreated.rows[0]);
+    res.locals.cardCreated = cardCreated.rows[0];
     return next();
   } catch (err) {
     return next({
@@ -35,7 +33,7 @@ cardController.updateCard = async (req, res, next) => {
     WHERE _id = ${cardId} RETURNING *`;
     const cardUpdated = await pool.query(queryString);
     // TODO: check cardUpdated's value
-    res.locals.cardUpdated = cardUpdated.rows;
+    res.locals.cardUpdated = cardUpdated.rows[0];
     return next();
   } catch (err) {
     return next({
@@ -70,7 +68,7 @@ cardController.moveCard = async (req, res, next) => {
     SET column_id = ${newColumnId}
     WHERE _id = ${cardId} RETURNING *`;
     const movedCard = await pool.query(queryString);
-    res.locals.movedCard = movedCard.rows;
+    res.locals.movedCard = movedCard.rows[0];
     return next();
   } catch (err) {
     return next({
