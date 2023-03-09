@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { useState, useEffect } from "react";
 import  { ColumnModal, CardModal } from '../components/Modals.jsx';
 import Board from '../components/Board.jsx'
+import Navbar from "../components/Navbar.jsx";
+import ErrorBoundary from "../components/ErrorBoundary.jsx";
 
 /**
  * we want this to have a navbar holding multiple board buttons
@@ -82,7 +84,12 @@ function HomePage({user, isLoggedIn, setLogin}) {
           <button className="logOut" onClick={() => (setLogin(false))}>LOG OUT</button>
 
         </header>
-      
+
+      <ErrorBoundary>
+        <Navbar />
+      </ErrorBoundary>
+
+
         <div className='boardDisplay'>
           <div className="modal-box">
             {/* when showModal is set to true a column modal will render */}
@@ -104,10 +111,7 @@ function HomePage({user, isLoggedIn, setLogin}) {
               : (<></>)
             }
           </div>
-            <Board />
-          <div>
-            <button className="addColumn" onClick={() => setShowColumnModal(true)}>ADD COLUMN</button>
-          </div>
+          <Board />
         </div>
       </div>
   );
@@ -115,3 +119,12 @@ function HomePage({user, isLoggedIn, setLogin}) {
 }
 
 export default HomePage;
+
+// navbar
+  // user id from cookie
+  // axios getAllBoardsByUserID => []
+  // buttons display name of board
+    // button gets by board by id
+
+// homepage displays the board from the navbar onclick = board_id
+  // axios get request by board_id => boardObj{}
