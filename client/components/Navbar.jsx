@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-// import NavItem from './NavItem';
+import UserContext from "../UserContext";
+import NavItem from './NavItem';
+import DropdownMenu from './DropdownMenu';
+import DropdownItem from './DropdownItem';
+
 
 const Navbar = ({ isDarkMode, setIsDarkMode }) => {
   const [activeLink, setActiveLink] = useState("home");
@@ -17,7 +21,7 @@ const Navbar = ({ isDarkMode, setIsDarkMode }) => {
     <nav className={`navbar`}>
       <ul className="navbar-nav">
         <NavItem
-          link="/"
+          link="/home"
           activeLink={activeLink}
           handleLinkClick={handleLinkClick}
         >
@@ -44,106 +48,6 @@ const Navbar = ({ isDarkMode, setIsDarkMode }) => {
   );
 };
 
-const NavItem = ({ link, activeLink, handleLinkClick, children }) => {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-
-  const handleDropdownClick = () => {
-    setDropdownOpen(!dropdownOpen);
-  };
-
-  return (
-    <li className="nav-item">
-      <Link
-        to={link}
-        className={activeLink === link ? "active" : ""}
-        onClick={() => handleLinkClick(link)}
-      >
-        {children}
-      </Link>
-      {dropdownOpen && (
-        <div className="dropdown-menu">
-          <ul className="dropdown-menu-list">
-            {React.Children.map(children, (child) => {
-              return React.cloneElement(child, {
-                setOpen: setDropdownOpen,
-                setNavItemActive: handleLinkClick,
-              });
-            })}
-          </ul>
-        </div>
-      )}
-    </li>
-  );
-};
-
-
-
-function DropdownMenu(props) {
-  const [open, setOpen] = useState(false);
-
-  const handleCreateBoard = () => {
-    fetch('/board/create', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        // include any data you need to send with the request
-      })
-    })
-      .then(response => response.json())
-      .then(data => {
-        // handle the response data here
-        console.log(data);
-      })
-      .catch(error => {
-        // handle errors here
-        console.error(error);
-      });
-  };
-
-  const handleMenuClick = (event) => {
-    event.preventDefault();
-    setOpen(!open);
-  };
-
-
-  return (
-    <div className="dropdown">
-      <a href="#" onClick={() => setOpen(!open)}>Profile</a>
-      {open && (
-        <ul className="dropdown-menu">
-          {props.children}
-          <li>
-            <button onClick={handleCreateBoard}>Create new board</button>
-          </li>
-          <li>
-            <button className="logOut" onClick={() => props.setLogin(false)}>
-              LOG OUT
-            </button>
-          </li>
-        </ul>
-      )}
-    </div>
-  );
-}
-
-
-
-
-
-function DropdownItem(props) {
-  return (
-    <li>
-      <Link
-        to={props.link}
-        className="dropdown-link"
-        onClick={() => props.setOpen(false)}
-      >
-        {props.children}
-      </Link>
-    </li>
-  );
-}
-
 export default Navbar;
+
+
