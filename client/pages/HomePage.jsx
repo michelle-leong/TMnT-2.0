@@ -22,7 +22,7 @@ function HomePage() {
   // const [columnsState, setColumns] = useState(null);
   const [ boardData, setBoardData ] = useState([]);
   // temp setting as board 2 for testing
-  const [ currBoardID, setCurrBoardID] = useState(6);
+  const [ currBoardID, setCurrBoardID] = useState(2);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const { user, setUser } = useContext(UserContext);
 
