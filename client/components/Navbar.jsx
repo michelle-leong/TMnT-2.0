@@ -14,7 +14,7 @@ const Navbar = ({ isDarkMode, setIsDarkMode }) => {
   };
 
   return (
-    <nav className={`navbar ${isDarkMode ? 'dark-mode' : ''}`}>
+    <nav className={`navbar`}>
       <ul className="navbar-nav">
         <NavItem
           link="/"
