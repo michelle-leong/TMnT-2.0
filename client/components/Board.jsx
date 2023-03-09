@@ -54,7 +54,7 @@ import { ColumnModal } from "./Modals.jsx";
  * @returns 
  */
 function Board ({ currBoardID }) {
-  // const { _id, name } = board
+// const { _id, name } = board
   // placeholder data
   const name = 'myBoard';
   
@@ -87,12 +87,7 @@ function Board ({ currBoardID }) {
     console.log('toggled Add Column Modal');
     setShowColumnModal(!showColumnModal);
   }
-<<<<<<< HEAD
-
-  console.log(`board ${currBoardID} columns: ${columns}`);
-
-=======
->>>>>>> dev
+  console.log(`board ${_id} columns: ${columns}`);
   // render array of column objects prop drilling column info
   const renderColumns = columns.map((columnObj) => (
     <Column 
