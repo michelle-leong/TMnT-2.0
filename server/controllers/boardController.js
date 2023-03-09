@@ -12,6 +12,7 @@ boardController.createBoard = async (req, res, next) => {
     const queryString = `INSERT INTO boards (name) VALUES ('${boardName}') RETURNING *`;
     const response = await pool.query(queryString);
     res.locals.board = response.rows[0];
+    console.log('in boardController.createBoard', res.locals.board);
     return next();
   } catch (err) {
     return next({
@@ -61,15 +62,15 @@ boardController.deleteBoard = async (req, res, next) => {
 boardController.joinUsernBoard = async (req, res, next) => {
   try {
     const userId = req.body.id;
-    const boardId = res.locals.board[0]._id;
+    const boardId = res.locals.board._id;
     const queryString = `INSERT INTO users_boards (user_id, board_id)
     VALUES (${userId}, ${boardId})`;
     await pool.query(queryString);
     return next();
   } catch (err) {
     return next({
-      log: 'error in boardController.getBoards',
-      message: { err: 'boardController.getBoards' + err },
+      log: 'error in boardController.joinUsernBoard',
+      message: { err: 'boardController.joinUsernBoard' + err },
     });
   }
 };
