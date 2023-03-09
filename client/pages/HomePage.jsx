@@ -5,6 +5,7 @@ import Board from "../components/Board.jsx";
 import Navbar from "../components/Navbar.jsx";
 import ErrorBoundary from "../components/ErrorBoundary.jsx";
 import BoardContext from "./BoardContext.js";
+import UserContext from "../UserContext.js";
 
 /**
  * we want this to have a navbar holding multiple board buttons
