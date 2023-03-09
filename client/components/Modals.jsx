@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import { useState, useEffect } from "react";
+import axios from "axios";
+
 import Column from './Column.jsx'
 
 // Modal for the columns
@@ -22,36 +24,54 @@ export const ColumnModal = ({
       name,
       board_id
     };
-
+    
     console.log('axios create column');
     // axios will return a column with an _id
     // push that column with the _id onto our array
     // for now pushing the newColumn object
     // temporary add column
-    const addColumn = {
-      column_id: 1000,
-      column_name: newColumn.name,
-      board_id: newColumn.board_id
-    };
-    console.log(`
-    addColumn.name: ${addColumn.column_id}\n
-    addColumn.name: ${addColumn.column_name}\n
-    addColumn.board_id : ${addColumn.board_id}
-    `);
-    setColumns(columnsState => {
-      const newState = columnsState.map(obj => ({...obj}));
-      newState.push(addColumn);
-      return newState;
-    });
+    axios.post('api/columns/new', {
+      "board_id": "2",
+      "name": "teset1234"
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Error caught when creating new column!!!");
+        } 
+        setColumns(prevColumns => {
+          const addColumn = {
+            column_id: response._id,
+            column_name: response.name,
+            board_id: response.board_id
+          };
+
+          return [...prevColumns, addColumn];
+        });
+      })
+      .catch((err) => {
+        console.error("Error caught when creating new column");
+      })
+
+    // setColumns(columnsState => {
+    //   const newState = columnsState.map(obj => ({...obj}));
+    //   newState.push({
+    //     column_id: 999,
+    //     column_name: newColumn.name,
+    //     board_id
+    //   });
+    //   return newState;
+    // });
     
 
     setShowColumnModal(!showColumnModal);
     // setShowCardModal(!showCardModal);
   }
 
+
   const handleCancel = () => {
     setShowColumnModal(!showColumnModal);
   };
+
 
   return (
     <div className="modal-home">

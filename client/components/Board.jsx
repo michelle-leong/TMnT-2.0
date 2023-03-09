@@ -74,6 +74,9 @@ function Board ({ currBoardID }) {
         });
       }
     })
+    .catch(error => {
+      console.error("An error occured in fetching currBoard");
+    })
     // empty array dependency, so this runs only on mount
   }, []);
 
@@ -94,6 +97,7 @@ function Board ({ currBoardID }) {
       key={columnObj.column_id}
       column={columnObj}
       setColumns={setColumns}
+      columns={columns}
     />
   ));
 
@@ -104,11 +108,37 @@ const onDragEnd = (result) => {
 
   if (!destination) return;
   if (destination.droppableId === source.droppableId && destination.index === source.index) return;
+  let beginning;
+  let landing;
+  let beginningIndex = source.droppableId;
+  let landingIndex = destination.droppableId;
 
-  let add;
-  //set to column card array
-  let beginning = source.droppableId;
-  let landing = destination.droppableId;
+  columns.forEach((ele, index) => {
+    if (ele.column_id.toString() === source.droppableId){
+      beginning = ele;
+      beginningIndex = index;
+    } 
+    if (ele.column_id.toString() === destination.droppableId){
+      landing = ele;
+      landingIndex = index
+    } 
+  })
+
+
+  //create a copy of the card
+  const cardCopy = {...beginning.cards[source.index]}
+  setColumns((prevState) => {
+    //copy previous state
+    prevState = [...prevState];
+
+    //remove card from old column
+    prevState[beginningIndex].cards.splice(source.index, 1)
+
+    //add card to new column
+    prevState[landingIndex].cards.splice(destination.index, 0, cardCopy)
+    return prevState;
+  })
+
   
 }
 

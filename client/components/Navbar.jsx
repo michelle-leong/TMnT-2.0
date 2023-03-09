@@ -2,17 +2,19 @@ import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import UserContext from "../UserContext.jsx";
+import BoardContext from "../pages/BoardContext.jsx";
 // import NavItem from "./navbar/NavItem.jsx";
 // import DropdownMenu from "./navbar/DropdownMenu.jsx";
 // import DropdownItem from "./navbar/DropdownItem.jsx";
 
-const Navbar = ({ isDarkMode, setIsDarkMode, currBoardID, setCurrBoardID }) => {
+const Navbar = ({ isDarkMode, setIsDarkMode }) => {
   const [activeLink, setActiveLink] = useState("home");
   const { user } = useContext(UserContext);
   const [boardList, setBoardList] = useState([]);
-  // need a fetch call to grab all boards
-
-
+  const { currBoardID, setCurrBoardID } = useContext(BoardContext);
+  
+  
+  // fetch call to grab all boards for the user
   useEffect(() => {
     axios.post('/api/users/getBoards', { id: user._id })
       .then(res => {
@@ -32,7 +34,7 @@ const Navbar = ({ isDarkMode, setIsDarkMode, currBoardID, setCurrBoardID }) => {
     setIsDarkMode(!isDarkMode);
   };
 
-  // make another fetch request to get the board with the given boardID
+  // // make another fetch request to get the board with the given boardID
   // const handleBoardSelect = (boardID) => {
   //   axios.get(`/api/board/${boardID}`)
   //     .then(res => {
@@ -44,7 +46,7 @@ const Navbar = ({ isDarkMode, setIsDarkMode, currBoardID, setCurrBoardID }) => {
 
   // the boards mapped from the server
   const boardOptions = Array.isArray(boardList) && boardList.map(board => (
-    <DropdownItem link="#" onClick={() => handleBoardSelect(board._id)}>{board.name}</DropdownItem>
+    <DropdownItem link="#" onClick={() => setCurrBoardID(board._id)}>{board.name}</DropdownItem>
   ));
   
   // show board 1 in currBoardId
@@ -53,13 +55,14 @@ const Navbar = ({ isDarkMode, setIsDarkMode, currBoardID, setCurrBoardID }) => {
   return (
     <nav className={`navbar`}>
       <ul className="navbar-nav">
-        <NavItem
-          link="/home"
-          activeLink={activeLink}
-          handleLinkClick={handleLinkClick}
+      <NavItem
+        link="/home"
+        activeLink={activeLink}
+        handleLinkClick={() => handleLinkClick("home")}
         >
-          Home
-        </NavItem>
+        Home
+      </NavItem>
+
         <input type="text" name="input-box" />
        
         <NavItem>
@@ -91,6 +94,7 @@ const Navbar = ({ isDarkMode, setIsDarkMode, currBoardID, setCurrBoardID }) => {
 
 const NavItem = ({ link, activeLink, handleLinkClick, children }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const setCurrBoardID = useContext(BoardContext);
 
   const handleDropdownClick = () => {
     setDropdownOpen(!dropdownOpen);
@@ -126,6 +130,7 @@ const NavItem = ({ link, activeLink, handleLinkClick, children }) => {
 function DropdownMenu(props) {
   const [open, setOpen] = useState(false);
   const { user } = useContext(UserContext);
+  const setCurrBoardID = useContext(BoardContext);
 
   const handleCreateBoard = () => {
     axios.post('/api/board/create', {
@@ -152,13 +157,13 @@ function DropdownMenu(props) {
     setOpen(!open);
   };
 
-  const handleBoardSelect = (boardID) => {
-    props.setCurrBoardID(boardID);
-  };
+  // const handleBoardSelect = (boardID) => {
+  //   props.setCurrBoardID(boardID);
+  // };
 
   return (
     <div className="dropdown">
-      ...
+      profile
       {open && (
         <ul className="dropdown-menu">
           {props.children}
@@ -181,6 +186,8 @@ function DropdownMenu(props) {
 
 
 function DropdownItem(props) {
+  const setCurrBoardID = useContext(BoardContext);
+
   return (
     <li>
       <Link
@@ -188,7 +195,7 @@ function DropdownItem(props) {
         className="dropdown-link"
         onClick={() => {
           props.setOpen(false);
-          props.handleBoardSelect(props.boardID);
+          // props.handleBoardSelect(props.boardID);
           props.setCurrBoardID(props.boardID);
         }}
       >

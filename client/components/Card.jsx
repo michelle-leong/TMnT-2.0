@@ -28,7 +28,7 @@ export default function Card ({ card, setCards, dropIndex }) {
    /*className={`cards ${snapshot.isDragging ? "drag" : ""}`*/
 // maybe in the Draggable code need to add task={task}??
   return (
-    <Draggable draggableId={card_id.toString()} index={dropIndex}>
+    <Draggable key={card_id} draggableId={card_id.toString()} index={dropIndex}>
       {(provided, snapshot) => (
         <div className="card card-content-container"    
         {...provided.draggableProps}
