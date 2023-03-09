@@ -19,30 +19,31 @@ export const ColumnModal = ({
   
   const handleAdd = () => {
     const newColumn = {
-      _id: 10, // temp assignment
       name,
       board_id
     };
 
-    console.log(`
-    newColumn._id : ${newColumn._id}\n
-    newColumn.name: ${newColumn.name}\n
-    newColumn.board_id : ${newColumn.board_id}
-    `);
     console.log('axios create column');
     // axios will return a column with an _id
-      // push that column with the _id onto our array
-      // for now pushing the newColumn object
+    // push that column with the _id onto our array
+    // for now pushing the newColumn object
     // temporary add column
     const addColumn = {
-      column_id: newColumn._id,
-      column_name: newColumn.name
+      column_id: 1000,
+      column_name: newColumn.name,
+      board_id: newColumn.board_id
     };
+    console.log(`
+    addColumn.name: ${addColumn.column_id}\n
+    addColumn.name: ${addColumn.column_name}\n
+    addColumn.board_id : ${addColumn.board_id}
+    `);
     setColumns(columnsState => {
       const newState = columnsState.map(obj => ({...obj}));
       newState.push(addColumn);
       return newState;
     });
+    
 
     setShowColumnModal(!showColumnModal);
     // setShowCardModal(!showCardModal);
@@ -114,15 +115,21 @@ export const CardModal = ({
 
     console.log(`
     newCard.task: ${newCard.task}\n
-    newCard.task: ${newCard.columnId}
+    newCard.columnId: ${newCard.columnId}
     `);
     console.log('axios create card');
     // axios will return a card with an _id
       // push that card with the _id onto our array
       // for now pushing the newcard object
+    // dummy addCard
+    const addCard = {
+      card_id: 999,
+      card_task: newCard.task
+    }
+    
     setCards(cardsState => {
       const newState = cardsState.map(obj => ({...obj}));
-      newState.push(newCard);
+      newState.push(addCard);
       return newState;
     });
 

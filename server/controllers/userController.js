@@ -90,7 +90,7 @@ userController.verifyUser = async (req, res, next) => {
         });
       } else {
         res.locals.user = queryResponse[0];
-        req.session.username = res.locals.user.username;
+        // req.session.username = res.locals.user.username;
         return next();
       }
     });
@@ -113,7 +113,7 @@ userController.getBoards = async (req, res, next) => {
     const boards = await pool.query(queryString);
     res.locals.allBoards = boards;
     return next();
-  } catch (error) {
+  } catch (err) {
     return next({
       log: 'error in userController.getBoards',
       message: {
