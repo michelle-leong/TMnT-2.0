@@ -1,15 +1,13 @@
 const path = require('path');
 const express = require('express');
 const cors = require('cors');
+// const genuuid = require('uuid');
 const UserRouter = require('./routes/UserRouter');
 const BoardRouter = require('./routes/BoardRouter');
 const ColumnRouter = require('./routes/ColumnRouter');
 const CardRouter = require('./routes/CardRouter');
+const sessions = require('express-session');
 
-const userController = require('./controllers/userController');
-const sessionController = require('./controllers/sessionController');
-const cookieController = require('./controllers/cookieController');
-const boardController = require('./controllers/boardController');
 const cookieParser = require('cookie-parser');
 
 // setup app and port
@@ -27,11 +25,34 @@ app.use(cors());
 // handle requests for static files (bundle.js)
 app.use('/build', express.static(path.resolve(__dirname, '../build')));
 
+const currSession = {
+  secret: 'supersecret',
+  saveUninitialized: true,
+  cookie: { maxAge: 120000, secure: false },
+  resave: false,
+};
+
+app.set('trust proxy', 1);
+
+app.use(sessions(currSession));
+
 // route handlers
-app.use('/users', UserRouter);
-app.use('/boards', BoardRouter);
-app.use('/columns', ColumnRouter);
-app.use('/cards', CardRouter);
+app.use('/api/users', UserRouter);
+
+app.use('/api', (req, res, next) => {
+  if (!req.session.username) {
+    // res.redirect('http://localhost:3000/api/user/login');
+    return next({
+      log: 'no session found',
+      message: { err: 'no session found' },
+    });
+  } else {
+    return next();
+  }
+});
+app.use('/api/boards', BoardRouter);
+app.use('/api/columns', ColumnRouter);
+app.use('/api/cards', CardRouter);
 
 // server index.html
 app.get('/', (req, res) => {
