@@ -3,57 +3,49 @@ import { useState, useEffect } from "react";
 import Column from './Column.jsx'
 
 // Modal for the columns
-const ColumnModal = ({ showColumnModal, setShowColumnModal, showCardModal, setShowCardModal, boardData, setBoardData, currBoardID}) => {
+/**
+ * showColumnModeal : Boolean
+ * columns : array[] of column objects
+ * board_id : Number
+ */
+export const ColumnModal = ({ 
+    showColumnModal, 
+    setShowColumnModal, 
+    setColumns,
+    board_id
+  }) => {
+
+  const [name, setName] = useState('');
   
-  /*
-  boardData {
-    boardName: { type: String, required: true, unique: true },
-      columns: [
-        {
-          columnName: { type: String, required: true, unique: true },
-          cards: [
-            {
-              cardText: { type: String, required: true, unique: true }
-            }
-          ]
-        }
-      ]
-    }
-  */
- 
+  const handleAdd = () => {
+    const newColumn = {
+      _id: 10,
+      name,
+      board_id
+    };
 
-  const saveData = () => {
-    // get the value from the input field
-    const newColumnName = document.querySelector('.modal-column-input').value;
-    // store it somewhere (local?)
-    // our local state needs to reflect added column
-    const columnName = boardData[0]
+    console.log(`
+    newColumn._id : ${newColumn._id}\n
+    newColumn.name: ${newColumn.name}\n
+    newColumn.board_id : ${newColumn.board_id}
+    `);
+    console.log('axios create column');
+    // axios will return a column with an _id
+      // push that column with the _id onto our array
+      // for now pushing the newColumn object
+    setColumns(columnsState => {
+      const newState = columnsState.map(obj => ({...obj}));
+      newState.push(newColumn);
+      return newState;
+    });
 
-    const newBoardData = boardData.map(board => {
-      if (board._id === currBoardID) {
-        board.columns.push({columnName: newColumnName, cards: [{cardText: 'Hello, I\'m a new column!'}]})
-      }
-      return board;
-    })
-    setBoardData(newBoardData)
-
-
-    // [{board1}, {board2}, {board3}]
-    // grab our current board by currBoardID
-    // create a newArrayOfBoards without the currBoard (filter by currBoardID)
-    // update current board
-    // add to array of boards
-    // setBoardData(newArrayOfBoards)
-
-    console.log('save data button is running')
-    setShowColumnModal(!showColumnModal)  //toggle columnModal on / off
-    // setShowCardModal is true, column should also render with reflected data
-    setShowCardModal(!showCardModal)
+    setShowColumnModal(!showColumnModal);
+    // setShowCardModal(!showCardModal);
   }
 
-  const deleteData = () => {
-    setShowColumnModal(!showColumnModal)    // toggle columnModal on / off
-  }
+  const handleCancel = () => {
+    setShowColumnModal(!showColumnModal);
+  };
 
   return (
     <div className="modal-home">
@@ -63,69 +55,106 @@ const ColumnModal = ({ showColumnModal, setShowColumnModal, showCardModal, setSh
         <input 
           className="modal-column-input"
           type="text"
-          required
+          // required
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           placeholder="column name"
-          // do we want an onChange here or wait until the input is finished
         />
       </form>
       <div className='modal-button-cont'>
-        <button className="modal-text-button"
-          onClick={() => saveData()}>
-            SAVE
+        <button 
+          className="modal-text-button"
+          onClick={handleAdd}
+        >
+          ADD
         </button>
-        <button className="modal-text-button"
-          onClick={() => deleteData()}>
-            DELETE
+        <button 
+          className="modal-text-button"
+          onClick={handleCancel}
+        >
+          DELETE
         </button>
       </div>
-
-      {showCardModal && <CardModal />}
+      {/* {showCardModal && <CardModal />} */}
     </div>
   )
 }
 
 
 
-// Modal for the card
-const CardModal = ({  showCardModal,setShowCardModal }) => {
+/**
+ * showCardModeal : Boolean
+ * cards : array[] of card objects
+ * board_id : Number
+ */
+export const CardModal = ({ 
+    showCardModal, 
+    setShowCardModal, 
+    setCards,
+    column_id 
+  }) => {
 
-  const addTask = () => {
-    const newCard = document.querySelector('card-modal-input').value;
-    // post users data to database
-    set
-    setShowCardModal(!showCardModal)
+  const [task, setTask] = useState(''); 
+
+  /**
+   * TODO error checking for empty strings 
+   * they were using required but it doesn't
+   * function without a submit in the form
+   */
+  const handleAdd = () => {
+    const newCard = {
+      task,
+      column_id
+    };
+
+    console.log(`
+    newCard.task: ${newCard.task}
+    `);
+    console.log('axios create card');
+    // axios will return a card with an _id
+      // push that card with the _id onto our array
+      // for now pushing the newcard object
+    setCards(cardsState => {
+      const newState = cardsState.map(obj => ({...obj}));
+      newState.push(newCard);
+      return newState;
+    });
+
+    setShowCardModal(!showCardModal);
   }
 
-  const deleteTask = () => {
-    setShowCardModal(!showCardModal)
+  const handleCancel = () => {
+    setShowCardModal(!showCardModal);
   }
 
   return (
     <div className="modal-home">
-
         <form className='modal-form'>
           <h1>ADD CARD</h1>
           <input 
             className="card-modal-input"
             type="text"
-            required
-            placeholders="add a task"
+            value={task}
+            onChange={(e) => setTask(e.target.value)}
+            // required
+            placeholder="add a task"
             // do we want an onChange here or wait until the input is finished
           />
         </form>
         <div className='modal-button-cont'>
-          <button className="modal-text-button"
-            onClick={() => addTask()}>
+          <button 
+            className="modal-text-button"
+            onClick={handleAdd}
+          >
             ADD CARD
           </button>
-          <button className="modal-text-button"
-            onClick={() => deleteTask()}>
-              CANCEL
+          <button 
+            className="modal-text-button"
+            onClick={handleCancel}
+          >
+            CANCEL
           </button>
         </div>
-
     </div>
   )
 }
-
-export { ColumnModal, CardModal }
