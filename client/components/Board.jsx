@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { useState, useEffect } from "react";
 import axios from 'axios';
+import {DragDropContext} from 'react-beautiful-dnd';
 
 // components
 import Column from "./Column.jsx";
@@ -86,9 +87,12 @@ function Board ({ currBoardID }) {
     console.log('toggled Add Column Modal');
     setShowColumnModal(!showColumnModal);
   }
+<<<<<<< HEAD
 
   console.log(`board ${currBoardID} columns: ${columns}`);
 
+=======
+>>>>>>> dev
   // render array of column objects prop drilling column info
   const renderColumns = columns.map((columnObj) => (
     <Column 
@@ -97,9 +101,26 @@ function Board ({ currBoardID }) {
       setColumns={setColumns}
     />
   ));
+
+const onDragEnd = (result) => {
+  console.log(result)
+
+  const {source, destination} = result;
+
+  if (!destination) return;
+  if (destination.droppableId === source.droppableId && destination.index === source.index) return;
+
+  let add;
+  //set to column card array
+  let beginning = source.droppableId;
+  let landing = destination.droppableId;
+  
+}
+
   
   // TODO board DELETE button
   return (
+    <DragDropContext onDragEnd={onDragEnd}>
     <div className="column-container">
       <div className="modal-box">
         {showColumnModal && 
@@ -116,6 +137,7 @@ function Board ({ currBoardID }) {
         <button className="addColumn" onClick={toggle}>ADD COLUMN</button>
       </div>
     </div>
+    </DragDropContext>
   )
 }
 

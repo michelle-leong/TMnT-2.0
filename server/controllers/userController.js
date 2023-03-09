@@ -111,9 +111,9 @@ userController.getBoards = async (req, res, next) => {
     ON users_boards.board_id = boards._id
     WHERE user_id = ${userId}`;
     const boards = await pool.query(queryString);
-    res.locals.allboards = boards;
+    res.locals.allBoards = boards;
     return next();
-  } catch (error) {
+  } catch (err) {
     return next({
       log: 'error in userController.getBoards',
       message: {
