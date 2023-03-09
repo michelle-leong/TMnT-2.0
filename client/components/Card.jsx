@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 export default function Card ({ card, setCards }) {
 
-  const { _id, task, column_id} = card;
+  const { card_id, card_task, column_id} = card;
 
   const handleDelete = () => {
     console.log('axios deleted card');
@@ -26,7 +26,7 @@ export default function Card ({ card, setCards }) {
 
   return (
     <div className="card card-content-container">
-      <p>{task}</p>
+      <p>{card_task} {card_id}</p>
       <div className="modal-button-cont">
         <button className="btn" onClick={toggle}>Update</button>
         <button className="btn" onClick={handleDelete}>Delete</button>
