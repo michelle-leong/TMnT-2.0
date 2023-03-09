@@ -61,7 +61,7 @@ boardController.deleteBoard = async (req, res, next) => {
 boardController.joinUsernBoard = async (req, res, next) => {
   try {
     const userId = req.body.id;
-    const boardId = res.locals.board[0]._id;
+    const boardId = res.locals.board._id;
     const queryString = `INSERT INTO users_boards (user_id, board_id)
     VALUES (${userId}, ${boardId})`;
     await pool.query(queryString);
