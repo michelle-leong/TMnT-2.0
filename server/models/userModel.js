@@ -1,13 +1,8 @@
-// const mongoose = require("mongoose");
-// const Schema = mongoose.Schema;
-
 const { Pool } = require('pg');
-
-const PG_URI =
-  'postgres://zgnmchem:O-Yfyi4tnIrjfpg4-uaAgSIrKIihx59g@kashin.db.elephantsql.com/zgnmchem';
+require('dotenv').config();
 
 const pool = new Pool({
-  connectionString: PG_URI,
+  connectionString: process.env.PG_URI,
 });
 
 // bcrypt

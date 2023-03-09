@@ -1,6 +1,7 @@
-const User = require('../models/userModel');
-const path = require('path');
+const bcrypt = require('bcryptjs');
 const pool = require('../models/userModel');
+
+const SALT_WORK_FACTOR = 10;
 
 const userController = {};
 
@@ -30,11 +31,12 @@ userController.createUser = async (req, res, next) => {
       });
     }
 
+    const hashedPassword = await bcrypt.hash(password, SALT_WORK_FACTOR);
     const queryString = `INSERT INTO users (username, password, first_name, last_name) 
-    VALUES ('${username}', '${password}', '${firstName}', '${lastName}') 
+    VALUES ('${username}', '${hashedPassword}', '${firstName}', '${lastName}') 
     RETURNING *`;
     const response = await pool.query(queryString);
-    res.locals.newUser = response.rows;
+    res.locals.user = response.rows[0];
     return next();
   } catch (err) {
     return next({
@@ -67,8 +69,8 @@ userController.verifyUser = async (req, res, next) => {
     const response = await pool.query(queryString);
     const queryResponse = response.rows;
     console.log(queryResponse);
-    if (queryResponse.length === 0 || password !== queryResponse[0].password) {
-      console.log('no password match');
+    if (queryResponse.length === 0) {
+      console.log('no user match');
       return next({
         log: 'userController.createUser',
         message: {
@@ -77,10 +79,19 @@ userController.verifyUser = async (req, res, next) => {
       });
     }
     // valid user
-    else {
-      res.locals.user = queryResponse[0];
-      return next();
-    }
+    bcrypt.compare(password, queryResponse[0].password, (err, response) => {
+      if (err) {
+        return next({
+          log: 'userController.createUser',
+          message: {
+            err: 'userController.createUser: password not found ',
+          },
+        });
+      } else {
+        res.locals.user = queryResponse[0];
+        return next();
+      }
+    });
   } catch (err) {
     return next({
       log: 'userController.verifyUser',
