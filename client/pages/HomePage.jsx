@@ -4,7 +4,7 @@ import { ColumnModal, CardModal } from "../components/Modals.jsx";
 import Board from "../components/Board.jsx";
 import Navbar from "../components/Navbar.jsx";
 import ErrorBoundary from "../components/ErrorBoundary.jsx";
-import BoardContext from "./BoardContext.js";
+import BoardContext from "./BoardContext.jsx";
 import UserContext from "../UserContext.jsx";
 
 /**
@@ -22,7 +22,7 @@ function HomePage() {
   // const [columnsState, setColumns] = useState(null);
   const [ boardData, setBoardData ] = useState([]);
   // temp setting as board 2 for testing
-  const [ currBoardID, setCurrBoardID] = useState();
+  const [ currBoardID, setCurrBoardID] = useState(2);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const { user, setUser } = useContext(UserContext);
 
@@ -69,10 +69,11 @@ function HomePage() {
 
   return (
     <div className={`homeCont ${isDarkMode ? "dark-mode" : ""}`}>
+      <BoardContext.Provider value={{ currBoardID, setCurrBoardID }}>
       <ErrorBoundary>
         <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} currBoardID={currBoardID} setCurrBoardID={setCurrBoardID} />
       </ErrorBoundary>
-
+      </BoardContext.Provider>
       <div className={`boardDisplay ${isDarkMode ? "dark-mode" : ""}`}>
         <div className="modal-box">
           {/* when showModal is set to true a column modal will render */}

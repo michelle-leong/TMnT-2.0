@@ -37,24 +37,26 @@ import {Droppable} from 'react-beautiful-dnd';
  * } param0 
  * @returns 
  */
-export default function Column ({ column, setColumns }) {
+export default function Column ({ columns ,column, setColumns, key }) {
 
-  const { column_id,  column_name , cards} = column;
+  const { column_id,  column_name , cards } = column;
 
   const [showCardModal, setShowCardModal] = useState(false);
   const [cardArray, setCards] = useState([]); // ideally a doubly linked list for super fast insertion
 
   useEffect(() => {
-    if (cards === undefined || cards === null) setCards([]);
+    if (!Array.isArray(cards)) setCards([]);
     else setCards(cards);
   }, []);
 
+
   const handleDelete = () => {
-    console.log('axios deleted Column');
+    console.log('axios deleted Column', column_id);
+    // console.log('key', key);
     setColumns(columnsState => {
       const newState = columnsState.map(obj => ({...obj}));
-      const index = newState.indexOf(column_id);
-      newState.splice(index, 1);
+      const index = newState.findIndex((colObj) => colObj.column_id === column_id); // find column at index
+      newState.splice(index, 1); // remove at index
       return newState;
     });
   }
@@ -73,7 +75,7 @@ export default function Column ({ column, setColumns }) {
 
   // render array of card objects prop drilling card info
   console.log(`${column_id}'s cardArray : ${cardArray}`);
-  const renderCards = cards.map((cardObj, index) => (
+  const renderCards = cardArray.map((cardObj, index) => (
     <Card
       dropIndex={index}
       key={cardObj._id} 
