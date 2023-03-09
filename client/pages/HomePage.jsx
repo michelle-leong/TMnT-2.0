@@ -69,7 +69,7 @@ function HomePage() {
   return (
     <div className={`homeCont ${isDarkMode ? "dark-mode" : ""}`}>
       <ErrorBoundary>
-        <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+        <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} currBoardID={currBoardID} setCurrBoardID={setCurrBoardID} />
       </ErrorBoundary>
 
       <div className={`boardDisplay ${isDarkMode ? "dark-mode" : ""}`}>
