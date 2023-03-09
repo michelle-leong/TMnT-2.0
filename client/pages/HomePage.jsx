@@ -22,26 +22,7 @@ function HomePage() {
   const [ currBoardID, setCurrBoardID] = useState('');
   const [isDarkMode, setIsDarkMode] = useState(false);
 
-  //render columns and cards within 
-  // [
-  //   {
-  //       "_id": "640635f9e846af21bdd5652e",
-  //       "boardName": "testBoard",
-  //       "columns": [
-  //           {
-  //               "_id": "64065a6f664404268f5fc975",
-  //               "columnName": "col1",
-  //               "cards": [
-  //                   {
-  //                       "_id": "64065a6f664404268f5fc976",
-  //                       "cardText": "hello, I'm a card!"
-  //                   }
-  //               ]
-  //           }
-  //       ]
-  //   }
-  // ]
-    //This is real code do not delete:
+  
     let renderColumns = [];
 
     // useEffect(() => {
@@ -78,7 +59,7 @@ function HomePage() {
     return (
       <div className={`homeCont ${isDarkMode ? 'dark-mode' : ''}`}>
 
-        {overlay}
+        {/* {overlay} */}
         
         {/* <header className='homeHeader'>
           <h1> Home Page </h1>

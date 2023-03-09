@@ -28,10 +28,10 @@ app.use(cors());
 app.use('/build', express.static(path.resolve(__dirname, '../build')));
 
 // route handlers
-app.use('/users', UserRouter);
-app.use('/boards', BoardRouter);
-app.use('/columns', ColumnRouter);
-app.use('/cards', CardRouter);
+app.use('/api/users', UserRouter);
+app.use('/api/boards', BoardRouter);
+app.use('/api/columns', ColumnRouter);
+app.use('/api/cards', CardRouter);
 
 // server index.html
 app.get('/', (req, res) => {
