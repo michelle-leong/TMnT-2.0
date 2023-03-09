@@ -33,55 +33,6 @@ app.use('/boards', BoardRouter);
 app.use('/columns', ColumnRouter);
 app.use('/cards', CardRouter);
 
-// post cookie to check if user is logged in to send boards as res
-// app.post(
-//   '/api',
-//   sessionController.isLoggedIn,
-//   userController.getBoardIds,
-//   boardController.getBoards,
-//   (req, res) => {
-//     res.status(200).json(res.locals.boards);
-//   }
-// );
-
-// app.post(
-//   '/login',
-//   userController.verifyUser,
-//   sessionController.startSession,
-//   cookieController.setSSIDCookie,
-//   (req, res) => {
-//     // what should happen here on successful log in?
-//     console.log("completing post request to '/login");
-//     // res.redirect('/secret');
-//     res.sendStatus(200);
-//     // res.redirect("/");
-//   }
-// );
-
-// app.post(
-//   '/signup',
-//   userController.createUser,
-//   sessionController.startSession,
-//   cookieController.setSSIDCookie,
-//   (req, res) => {
-//     // what should happen here on successful log in?
-//     console.log("completing post request to '/signup");
-//     // res.redirect('/secret');
-//     res.redirect('/');
-//     //change redirect to frontend w react router
-//   }
-// );
-
-// // for testing
-// app.use('/sessionTest', sessionController.isLoggedIn, (req, res) => {
-//   console.log('user isLoggedIn successfully.  Returning status 418');
-//   res.sendStatus(418);
-// });
-
-// app.use('/api', sessionController.isLoggedIn, (req, res) => {
-//   console.log('completing request to "/api"');
-// });
-
 // server index.html
 app.get('/', (req, res) => {
   console.log(`Get request for '/'.  sending index.html`);

@@ -1,4 +1,17 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
+
+const MONGO_URI =
+  'mongodb+srv://mleong:DYSbDaQKtjpcwOPn@tmnt-iteration.x6poia7.mongodb.net/?retryWrites=true&w=majority';
+mongoose
+  .connect(MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => {
+    'connected to Mongo DB';
+  })
+  .catch((err) => console.log(err));
+
 const Schema = mongoose.Schema;
 
 /**
@@ -10,9 +23,9 @@ const Schema = mongoose.Schema;
  */
 const sessionSchema = new Schema({
   cookieId: { type: String, required: true, unique: true },
-  createdAt: { type: Date, expires: 30, default: Date.now },
+  createdAt: { type: Date, expires: 300, default: Date.now },
 });
 
-const Session = mongoose.model("session", sessionSchema);
+const Session = mongoose.model('session', sessionSchema);
 
 module.exports = Session;
