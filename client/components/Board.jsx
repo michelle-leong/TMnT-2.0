@@ -1,12 +1,76 @@
 import React, { Component } from "react";
 import { useState, useEffect } from "react";
-import Column from "./Column.jsx";
-import { ColumnModal } from "./Modals.jsx";
+import axios from 'axios';
 import {DragDropContext} from 'react-beautiful-dnd';
 
-// get all columns expecting an array[] of column objects
-// expecting board object with all the id and name properties
+// components
+import Column from "./Column.jsx";
+import { ColumnModal } from "./Modals.jsx";
+
+/**
+ * [
+ *     {
+ *         "board": {
+ *             "columns": [
+ *                 {
+ *                     "cards": [
+ *                         {
+ *                             "card_id": 4,
+ *                             "card_task": "its a task"
+ *                         }
+ *                     ],
+ *                     "column_id": 2,
+ *                     "column_name": "testing columns"
+ *                 },
+ *                 {
+ *                     "cards": [
+ *                         {
+ *                             "card_id": 1,
+ *                             "card_task": "task updated again and again"
+ *                         },
+ *                         {
+ *                             "card_id": 5,
+ *                             "card_task": "its a task"
+ *                         },
+ *                         {
+ *                             "card_id": 6,
+ *                             "card_task": "its a task"
+ *                         }
+ *                     ],
+ *                     "column_id": 3,
+ *                     "column_name": "another testing column"
+ *                 }
+ *             ],
+ *             "board_id": 2,
+ *             "board_name": "test board"
+ *         }
+ *     }
+ * ]
+ * 
+ */
+/**
+ * 
+ * @param {props = {board : array[0].board = board object}} param0 
+ * @returns 
+ */
 function Board ({ board }) {
+
+    // temp useEffect call for fetch data call
+    // this should occur in a higher component (e.g. homepage or navbar)
+    useEffect(() => {
+      axios.get('api/boards/2')
+      .then(response => {
+        if (response.status === 200) {
+          const currentBoard = response.data[0].board;
+          // update columns array with get data
+          setColumns(columnsState => {
+            const newState = currentBoard.columns;
+            return newState;
+          });
+        }
+      })
+      // empty array dependency, so this runs only on mount
+    }, []);
 
   // const { _id, name } = board
   // placeholder data
@@ -25,19 +89,34 @@ function Board ({ board }) {
     console.log('toggled Add Column Modal');
     setShowColumnModal(!showColumnModal);
   }
-  console.log(`board ${_id} columns: ${columns}`);
   // render array of column objects prop drilling column info
   const renderColumns = columns.map((columnObj) => (
     <Column 
-      key={columnObj._id}
+      key={columnObj.column_id}
       column={columnObj}
       setColumns={setColumns}
     />
   ));
+
+const onDragEnd = (result) => {
+  console.log(result)
+
+  const {source, destination} = result;
+
+  if (!destination) return;
+  if (destination.droppableId === source.droppableId && destination.index === source.index) return;
+
+  let add;
+  //set to column card array
+  let beginning = source.droppableId;
+  let landing = destination.droppableId;
+  
+}
+
   
   // TODO board DELETE button
   return (
-    <DragDropContext>
+    <DragDropContext onDragEnd={onDragEnd}>
     <div className="column-container">
       <div className="modal-box">
         {showColumnModal && 

@@ -3,7 +3,7 @@ import { Draggable } from "react-beautiful-dnd";
 
 export default function Card ({ card, setCards, dropIndex }) {
 
-  const { _id, task, column_id} = card;
+  const { card_id, card_task, column_id} = card;
 
   const handleDelete = () => {
     console.log(_id);
@@ -28,14 +28,14 @@ export default function Card ({ card, setCards, dropIndex }) {
    /*className={`cards ${snapshot.isDragging ? "drag" : ""}`*/
 // maybe in the Draggable code need to add task={task}??
   return (
-    <Draggable draggableId={'hello'} index={dropIndex}>
-      {(provided) => (
+    <Draggable draggableId={card_id.toString()} index={dropIndex}>
+      {(provided, snapshot) => (
         <div className="card card-content-container"    
         {...provided.draggableProps}
         {...provided.dragHandleProps}
         ref={provided.innerRef}>  
   
-            <p>{task}</p>
+            <p>{card_task} {card_id}</p>
             <div className="modal-button-cont">
               <button className="btn" onClick={toggle}>Update</button>
               <button className="btn" onClick={handleDelete}>Delete</button>

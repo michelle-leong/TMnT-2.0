@@ -4,24 +4,56 @@ import Card from "./Card.jsx";
 import { CardModal } from "./Modals.jsx";
 import {Droppable} from 'react-beautiful-dnd';
 
-// _id might cause a failure
+/**
+ * {
+ *     "cards": [
+ *         {
+ *             "card_id": 1,
+ *             "card_task": "task updated again and again"
+ *         },
+ *         {
+ *             "card_id": 5,
+ *             "card_task": "its a task"
+ *         },
+ *         {
+ *             "card_id": 6,
+ *             "card_task": "its a task"
+ *         }
+ *     ],
+ *     "column_id": 3,
+ *     "column_name": "another testing column"
+ * }
+ */
+/**
+ * 
+ * @param {
+ * column : {
+ * cards: [{card objects}]
+ * column_id: number
+ * column_name: string
+ * }
+ * 
+ * setColumns = fn
+ * } param0 
+ * @returns 
+ */
 export default function Column ({ column, setColumns }) {
 
-  const { _id, name } = column;
+  const { column_id,  column_name , cards} = column;
 
   const [showCardModal, setShowCardModal] = useState(false);
-  const [cards, setCards] = useState([]); // ideally a doubly linked list for super fast insertion
+  const [cardArray, setCards] = useState(cards); // ideally a doubly linked list for super fast insertion
 
   const handleDelete = () => {
     console.log('axios deleted Column');
     setColumns(columnsState => {
       const newState = columnsState.map(obj => ({...obj}));
-      const index = newState.indexOf(_id);
+      const index = newState.indexOf(column_id);
       newState.splice(index, 1);
       return newState;
     });
   }
-
+  console.log('cards', cards);
   // open up add card modal form
   const toggle = () => {
     console.log('toggled Add Card Modal');
@@ -36,20 +68,20 @@ export default function Column ({ column, setColumns }) {
 
   // render array of card objects prop drilling card info
   const renderCards = cards.map((cardObj, index) => (
-    <Card 
+    <Card
       dropIndex={index}
       key={cardObj._id} 
       card={cardObj}
       setCards={setCards}
     />
   ));
-
+  console.log(renderCards)
   /**
    * TODO column titles should be an input similar 
    * to the board title, so they can be changed and updated
    */
   return (
-    <Droppable droppableId={_id.toString()}>
+    <Droppable droppableId={column_id.toString()}>
     {(provided) => (
     <div className='columnCont' ref={provided.innerRef} {...provided.droppableProps}>
       <div className="modal-box">
@@ -58,11 +90,11 @@ export default function Column ({ column, setColumns }) {
             showCardModal={showCardModal}
             setShowCardModal={setShowCardModal}
             setCards={setCards}
-            column_id={_id}
+            columnId={column_id}
           />
         }
       </div>
-      <div>{name}</div>
+      <div>{column_name} {column_id}</div>
       <div className='cardCont'>
         {renderCards}
       {provided.placeholder}

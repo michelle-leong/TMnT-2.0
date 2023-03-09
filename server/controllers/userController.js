@@ -113,7 +113,7 @@ userController.getBoards = async (req, res, next) => {
     const boards = await pool.query(queryString);
     res.locals.allboards = boards;
     return next();
-  } catch (error) {
+  } catch (err) {
     return next({
       log: 'error in userController.getBoards',
       message: {
