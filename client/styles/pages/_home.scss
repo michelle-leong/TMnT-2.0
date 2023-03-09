@@ -10,17 +10,17 @@
   gap: 30px;
 }
 
-.homeHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px;
-  width: 90vw;
-  height: 60px;
-  background-color: $color2;
-  border-radius: 15px;
-  border: 5px $color1 solid;
-}
+// .homeHeader {
+//   display: flex;
+//   align-items: center;
+//   justify-content: space-between;
+//   padding: 20px;
+//   width: 90vw;
+//   height: 60px;
+//   background-color: $color2;
+//   border-radius: 15px;
+//   border: 5px $color1 solid;
+// }
 
 .boardDisplay {
   display: flex;
@@ -34,12 +34,12 @@
   gap: 20px;
 }
 
-.overlay {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 998;
-  background: rgba(0, 0, 0, 0.3);
-}
+// .overlay {
+//   position: fixed;
+//   top: 0;
+//   right: 0;
+//   bottom: 0;
+//   left: 0;
+//   z-index: 998;
+//   background: rgba(0, 0, 0, 0.3);
+// }

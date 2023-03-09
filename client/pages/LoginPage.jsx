@@ -1,7 +1,6 @@
-import React, { useContext } from "react";
-import { useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import UserContext from "../UserContext";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 
 function LoginPage() {
   // useState for username, password
@@ -12,14 +11,21 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const [isLoggedIn, setLogin] = useState(false);
 
-  //HANDLE LOGIN
-
+  // check to see if user has a cookie already
   useEffect(() => {
-    if (user !== null) {
-      navigate("/home");
+    const userId = getCookie("userId"); // get userid from cookie sent from backend.
+    if (userId) {
+      // fetch user data using the userId
+      fetch(`/users/${userId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setUser(data);
+          Navigate("/");
+        });
     }
-  }, [user]);
+  }, []);
 
+  // handle login
   const handleSubmit = (e) => {
     e.preventDefault();
     const loginData = { username: username, password: password };
@@ -30,20 +36,36 @@ function LoginPage() {
       body: JSON.stringify(loginData),
     })
       .then((res) => {
-        // TODO switch to 400 status, reset input fields and boolean?
-        console.log(res.status);
         if (res.status === 404) {
           setLogin(false);
         } else {
           setLogin(true);
+          // set the userId cookie with the user's id
+          fetch(`/api/users?username=${username}`)
+            .then((res) => res.json())
+            .then((data) => {
+              document.cookie = `userId=${data._id}`; // depends on the data we get back from backend
+              setUser(data);
+              navigate("/home");
+            })
+            .catch((error) => {
+              console.log("Error fetching user data:", error);
+            });
         }
         console.log("logged in on LoginPage.jsx");
-        // console.log('users data', user)
       })
       .catch((error) => {
         console.log("incorrect username or password", error);
       });
   };
+
+  // getCookie function
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(";").shift();
+  }
+
   //RENDER
   return (
     <div className="loginCont">

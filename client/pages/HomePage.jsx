@@ -79,11 +79,11 @@ function HomePage({user, isLoggedIn, setLogin}) {
 
         {overlay}
         
-        <header className='homeHeader'>
+        {/* <header className='homeHeader'>
           <h1> Home Page </h1>
           <button className="logOut" onClick={() => (setLogin(false))}>LOG OUT</button>
 
-        </header>
+        </header> */}
 
       <ErrorBoundary>
         <Navbar />
