@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { useState, useEffect } from "react";
 import Card from "./Card.jsx";
 import { CardModal } from "./Modals.jsx";
+import {Droppable} from 'react-beautiful-dnd';
 
 // _id might cause a failure
 export default function Column ({ column, setColumns }) {
@@ -34,8 +35,9 @@ export default function Column ({ column, setColumns }) {
    */
 
   // render array of card objects prop drilling card info
-  const renderCards = cards.map((cardObj) => (
+  const renderCards = cards.map((cardObj, index) => (
     <Card 
+      dropIndex={index}
       key={cardObj._id} 
       card={cardObj}
       setCards={setCards}
@@ -47,7 +49,9 @@ export default function Column ({ column, setColumns }) {
    * to the board title, so they can be changed and updated
    */
   return (
-    <div className='columnCont'>
+    <Droppable droppableId={_id.toString()}>
+    {(provided) => (
+    <div className='columnCont' ref={provided.innerRef} {...provided.droppableProps}>
       <div className="modal-box">
         {showCardModal && 
           <CardModal
@@ -61,11 +65,14 @@ export default function Column ({ column, setColumns }) {
       <div>{name}</div>
       <div className='cardCont'>
         {renderCards}
+      {provided.placeholder}
       </div>
       <div className="modal-button-cont">
         <button className="btn" onClick={toggle}>Add Card</button>
         <button className="btn" onClick={handleDelete}>Delete Column</button>
       </div>
     </div>
+    )}
+    </Droppable>
   );
 }

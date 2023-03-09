@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { useState, useEffect } from "react";
 import Column from "./Column.jsx";
 import { ColumnModal } from "./Modals.jsx";
+import {DragDropContext} from 'react-beautiful-dnd';
 
 // get all columns expecting an array[] of column objects
 // expecting board object with all the id and name properties
@@ -36,6 +37,7 @@ function Board ({ board }) {
   
   // TODO board DELETE button
   return (
+    <DragDropContext>
     <div className="column-container">
       <div className="modal-box">
         {showColumnModal && 
@@ -52,6 +54,7 @@ function Board ({ board }) {
         <button className="addColumn" onClick={toggle}>ADD COLUMN</button>
       </div>
     </div>
+    </DragDropContext>
   )
 }
 
