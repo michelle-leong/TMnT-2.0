@@ -12,7 +12,7 @@ import ErrorBoundary from "../components/ErrorBoundary.jsx";
  * board component should 
  */
 
-function HomePage({user, isLoggedIn, setLogin}) {
+function HomePage() {
   // state to render a column creation modal
   const [ showColumnModal, setShowColumnModal ] = useState(false)
   // state to render a card creation modal
