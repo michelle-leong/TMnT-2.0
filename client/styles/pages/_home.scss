@@ -8,19 +8,25 @@
   justify-content: space-between;
   padding: 20px;
   gap: 30px;
+
+  // Dark mode styles
+  &.dark-mode {
+    background-color: $color9;
+    color: $color6;
+  }
 }
 
-.homeHeader {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px;
-  width: 90vw;
-  height: 60px;
-  background-color: $color2;
-  border-radius: 15px;
-  border: 5px $color1 solid;
-}
+// .homeHeader {
+//   display: flex;
+//   align-items: center;
+//   justify-content: space-between;
+//   padding: 20px;
+//   width: 90vw;
+//   height: 60px;
+//   background-color: $color2;
+//   border-radius: 15px;
+//   border: 5px $color1 solid;
+// }
 
 .boardDisplay {
   display: flex;
@@ -32,14 +38,19 @@
   border: 5px $color5 solid;
   padding: 20px;
   gap: 20px;
+
+  // Dark mode styles
+  &.dark-mode {
+    background-color: $color6;
+  }
 }
 
-.overlay {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 998;
-  background: rgba(0, 0, 0, 0.3);
-}
+// .overlay {
+//   position: fixed;
+//   top: 0;
+//   right: 0;
+//   bottom: 0;
+//   left: 0;
+//   z-index: 998;
+//   background: rgba(0, 0, 0, 0.3);
+// }

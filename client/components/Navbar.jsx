@@ -2,15 +2,19 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 // import NavItem from './NavItem';
 
-const Navbar = () => {
+const Navbar = ({ isDarkMode, setIsDarkMode }) => {
   const [activeLink, setActiveLink] = useState("home");
 
   const handleLinkClick = (link) => {
     setActiveLink(link);
   };
 
+  const handleThemeToggle = () => {
+    setIsDarkMode(!isDarkMode);
+  };
+
   return (
-    <nav className="navbar">
+    <nav className={`navbar`}>
       <ul className="navbar-nav">
         <NavItem
           link="/"
@@ -29,6 +33,12 @@ const Navbar = () => {
             <DropdownItem link="/table4">Table 4</DropdownItem>
           </DropdownMenu>
         </NavItem>
+
+        <li className="theme-toggle">
+          <button onClick={handleThemeToggle}>
+            {isDarkMode ? 'Light Mode' : 'Dark Mode'}
+          </button>
+        </li>
       </ul>
     </nav>
   );

@@ -12,7 +12,7 @@ import ErrorBoundary from "../components/ErrorBoundary.jsx";
  * board component should 
  */
 
-function HomePage({user, isLoggedIn, setLogin}) {
+function HomePage() {
   // state to render a column creation modal
   const [ showColumnModal, setShowColumnModal ] = useState(false)
   // state to render a card creation modal
@@ -20,6 +20,7 @@ function HomePage({user, isLoggedIn, setLogin}) {
   // const [columnsState, setColumns] = useState(null);
   const [ boardData, setBoardData ] = useState([]);
   const [ currBoardID, setCurrBoardID] = useState('');
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   //render columns and cards within 
   // [
@@ -75,22 +76,22 @@ function HomePage({user, isLoggedIn, setLogin}) {
     else overlay = null;
 
     return (
-      <div className='homeCont'>
+      <div className={`homeCont ${isDarkMode ? 'dark-mode' : ''}`}>
 
         {overlay}
         
-        <header className='homeHeader'>
+        {/* <header className='homeHeader'>
           <h1> Home Page </h1>
           <button className="logOut" onClick={() => (setLogin(false))}>LOG OUT</button>
 
-        </header>
+        </header> */}
 
       <ErrorBoundary>
-        <Navbar />
+      <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
       </ErrorBoundary>
 
 
-        <div className='boardDisplay'>
+        <div className={`boardDisplay ${isDarkMode ? 'dark-mode' : ''}`}>
           <div className="modal-box">
             {/* when showModal is set to true a column modal will render */}
             {/* having issues with page re-rendering when state is updated. modal does not stay up */}

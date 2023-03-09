@@ -23,9 +23,9 @@ const Schema = mongoose.Schema;
  */
 const sessionSchema = new Schema({
   cookieId: { type: String, required: true, unique: true },
-  createdAt: { type: Date, expires: 300, default: Date.now },
+  createdAt: { type: Date, expires: 30, default: Date.now },
 });
 
-const Session = mongoose.model('session', sessionSchema);
+const Session = mongoose.model("session", sessionSchema);
 
-module.exports = Session;
+// module.exports = Session;
