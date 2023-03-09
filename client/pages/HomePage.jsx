@@ -20,8 +20,9 @@ function HomePage() {
   // state to render a card creation modal
   const [showCardModal, setShowCardModal] = useState(false);
   // const [columnsState, setColumns] = useState(null);
-  const [boardData, setBoardData] = useState([]);
-  const [currBoardID, setCurrBoardID] = useState("");
+  const [ boardData, setBoardData ] = useState([]);
+  // temp setting as board 2 for testing
+  const [ currBoardID, setCurrBoardID] = useState(6);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const { user, setUser } = useContext(UserContext);
 
@@ -85,23 +86,18 @@ function HomePage() {
               setShowCardModal={setShowCardModal}
               boardData={boardData}
               currBoardID={currBoardID}
-              setBoardData={setBoardData}
-            />
-          ) : (
-            <></>
-          )}
-          {showCardModal ? (
-            <CardModal
-              showCardModal={showCardModal}
-              setShowCardModal={setShowCardModal}
-            />
-          ) : (
-            <></>
-          )}
+              setBoardData={setBoardData} />) 
+              : (<></>)
+            }
+            {showCardModal ? (<CardModal 
+              showCardModal={showCardModal} 
+              setShowCardModal={setShowCardModal} />) 
+              : (<></>)
+            }
+          </div>
+          <Board currBoardID={currBoardID} />
         </div>
-        <Board />
       </div>
-    </div>
   );
 }
 

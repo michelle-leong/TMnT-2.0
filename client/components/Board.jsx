@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { useState, useEffect } from "react";
 import axios from 'axios';
+import {DragDropContext} from 'react-beautiful-dnd';
 
 // components
 import Column from "./Column.jsx";
@@ -52,36 +53,34 @@ import { ColumnModal } from "./Modals.jsx";
  * @param {props = {board : array[0].board = board object}} param0 
  * @returns 
  */
-function Board ({ board }) {
-
-    // temp useEffect call for fetch data call
-    // this should occur in a higher component (e.g. homepage or navbar)
-    useEffect(() => {
-      axios.get('api/boards/2')
-      .then(response => {
-        if (response.status === 200) {
-          const currentBoard = response.data[0].board;
-          // update columns array with get data
-          setColumns(columnsState => {
-            const newState = currentBoard.columns;
-            return newState;
-          });
-        }
-      })
-      // empty array dependency, so this runs only on mount
-    }, []);
-
-  // const { _id, name } = board
+function Board ({ currBoardID }) {
+// const { _id, name } = board
   // placeholder data
-  const _id = 1;
   const name = 'myBoard';
-
+  
   const [showColumnModal, setShowColumnModal] = useState(false);
   const [columns, setColumns] = useState([]);
+  
+  useEffect(() => {
+    axios.get(`api/boards/${currBoardID}`)
+    .then(response => {
+      if (response.status === 200) {
+        const currentBoard = response.data[0].board;
+        console.log(currentBoard);
+        // update columns array with get data
+        setColumns(columnsState => {
+          const newState = currentBoard.columns;
+          return newState;
+        });
+      }
+    })
+    // empty array dependency, so this runs only on mount
+  }, []);
 
-  const handleDelete = () => {
-    console.log('axios deleted Board');
-  }
+
+  // const handleDelete = () => {
+  //   console.log('axios deleted Board');
+  // }
 
   // open up add Column modal form
   const toggle = () => {
@@ -97,9 +96,26 @@ function Board ({ board }) {
       setColumns={setColumns}
     />
   ));
+
+const onDragEnd = (result) => {
+  console.log(result)
+
+  const {source, destination} = result;
+
+  if (!destination) return;
+  if (destination.droppableId === source.droppableId && destination.index === source.index) return;
+
+  let add;
+  //set to column card array
+  let beginning = source.droppableId;
+  let landing = destination.droppableId;
+  
+}
+
   
   // TODO board DELETE button
   return (
+    <DragDropContext onDragEnd={onDragEnd}>
     <div className="column-container">
       <div className="modal-box">
         {showColumnModal && 
@@ -116,10 +132,10 @@ function Board ({ board }) {
         <button className="addColumn" onClick={toggle}>ADD COLUMN</button>
       </div>
     </div>
+    </DragDropContext>
   )
 }
 
-//  onClick={() => setShowColumnModal(true)}
 export default Board;
 
 // board should get all cols
