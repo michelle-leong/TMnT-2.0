@@ -52,43 +52,43 @@ import { ColumnModal } from "./Modals.jsx";
  * @param {props = {board : array[0].board = board object}} param0 
  * @returns 
  */
-function Board ({ board }) {
-
-    // temp useEffect call for fetch data call
-    // this should occur in a higher component (e.g. homepage or navbar)
-    useEffect(() => {
-      axios.get('api/boards/2')
-      .then(response => {
-        if (response.status === 200) {
-          const currentBoard = response.data[0].board;
-          // update columns array with get data
-          setColumns(columnsState => {
-            const newState = currentBoard.columns;
-            return newState;
-          });
-        }
-      })
-      // empty array dependency, so this runs only on mount
-    }, []);
-
+function Board ({ currBoardID }) {
   // const { _id, name } = board
   // placeholder data
-  const _id = 1;
   const name = 'myBoard';
-
+  
   const [showColumnModal, setShowColumnModal] = useState(false);
   const [columns, setColumns] = useState([]);
+  
+  useEffect(() => {
+    axios.get(`api/boards/${currBoardID}`)
+    .then(response => {
+      if (response.status === 200) {
+        const currentBoard = response.data[0].board;
+        console.log(currentBoard);
+        // update columns array with get data
+        setColumns(columnsState => {
+          const newState = currentBoard.columns;
+          return newState;
+        });
+      }
+    })
+    // empty array dependency, so this runs only on mount
+  }, []);
 
-  const handleDelete = () => {
-    console.log('axios deleted Board');
-  }
+
+  // const handleDelete = () => {
+  //   console.log('axios deleted Board');
+  // }
 
   // open up add Column modal form
   const toggle = () => {
     console.log('toggled Add Column Modal');
     setShowColumnModal(!showColumnModal);
   }
-  console.log(`board ${_id} columns: ${columns}`);
+
+  console.log(`board ${currBoardID} columns: ${columns}`);
+
   // render array of column objects prop drilling column info
   const renderColumns = columns.map((columnObj) => (
     <Column 
@@ -119,7 +119,6 @@ function Board ({ board }) {
   )
 }
 
-//  onClick={() => setShowColumnModal(true)}
 export default Board;
 
 // board should get all cols

@@ -19,7 +19,8 @@ function HomePage() {
   const [ showCardModal, setShowCardModal ] = useState(false)
   // const [columnsState, setColumns] = useState(null);
   const [ boardData, setBoardData ] = useState([]);
-  const [ currBoardID, setCurrBoardID] = useState('');
+  // temp setting as board 2 for testing
+  const [ currBoardID, setCurrBoardID] = useState(6);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   //render columns and cards within 
@@ -112,7 +113,7 @@ function HomePage() {
               : (<></>)
             }
           </div>
-          <Board />
+          <Board currBoardID={currBoardID} />
         </div>
       </div>
   );

@@ -41,7 +41,12 @@ export default function Column ({ column, setColumns }) {
   const { column_id,  column_name , cards} = column;
 
   const [showCardModal, setShowCardModal] = useState(false);
-  const [cardArray, setCards] = useState(cards); // ideally a doubly linked list for super fast insertion
+  const [cardArray, setCards] = useState([]); // ideally a doubly linked list for super fast insertion
+
+  useEffect(() => {
+    if (cards === undefined || cards === null) setCards([]);
+    else setCards(cards);
+  }, []);
 
   const handleDelete = () => {
     console.log('axios deleted Column');
@@ -66,6 +71,7 @@ export default function Column ({ column, setColumns }) {
    */
 
   // render array of card objects prop drilling card info
+  console.log(`${column_id}'s cardArray : ${cardArray}`);
   const renderCards = cardArray.map((cardObj) => (
     <Card 
       key={cardObj.card_id} 
