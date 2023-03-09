@@ -1,11 +1,11 @@
 import React, { Component } from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { ColumnModal, CardModal } from "../components/Modals.jsx";
 import Board from "../components/Board.jsx";
 import Navbar from "../components/Navbar.jsx";
 import ErrorBoundary from "../components/ErrorBoundary.jsx";
 import BoardContext from "./BoardContext.js";
-import UserContext from "../UserContext.js";
+import UserContext from "../UserContext.jsx";
 
 /**
  * we want this to have a navbar holding multiple board buttons
@@ -23,6 +23,7 @@ function HomePage() {
   const [boardData, setBoardData] = useState([]);
   const [currBoardID, setCurrBoardID] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const { user, setUser } = useContext(UserContext);
 
   let renderColumns = [];
 
@@ -44,6 +45,7 @@ function HomePage() {
   //   })
   // },[isLoggedIn])
 
+  console.log("user", user);
   console.log("BOARD DATA", boardData);
 
   if (boardData.length !== 0) {

@@ -1,20 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import UserContext from "../UserContext";
-// import NavItem from "./navbar/NavItem";
-// import DropdownMenu from "./navbar/DropdownMenu";
-// import DropdownItem from "./navbar/DropdownItem";
+import UserContext from "../UserContext.jsx";
+// import NavItem from "./navbar/NavItem.jsx";
+// import DropdownMenu from "./navbar/DropdownMenu.jsx";
+// import DropdownItem from "./navbar/DropdownItem.jsx";
 
 const Navbar = ({ isDarkMode, setIsDarkMode }) => {
   const [activeLink, setActiveLink] = useState("home");
   const { user } = useContext(UserContext);
   const [boardList, setBoardList] = useState([]);
   // need a fetch call to grab all boards
+
+
   useEffect(() => {
     axios.post('/api/users/getBoards', { id: user._id })
       .then(res => {
         setBoardList(res.data);
+        console.log(user);
       })
       .catch(error => console.error(error));
   }, [user._id]);
@@ -29,19 +32,20 @@ const Navbar = ({ isDarkMode, setIsDarkMode }) => {
   };
 
   // make another fetch request to get the board with the given boardID
-  const handleBoardSelect = (boardID) => {
-    axios.get(`/api/board/${boardID}`)
-      .then(res => {
-        // handle the response data here and update the state to render the board
-        console.log(res.data);
-      })
-      .catch(error => console.error(error));
-  };
+  // const handleBoardSelect = (boardID) => {
+  //   axios.get(`/api/board/${boardID}`)
+  //     .then(res => {
+  //       // handle the response data here and update the state to render the board
+  //       console.log(res.data);
+  //     })
+  //     .catch(error => console.error(error));
+  // };
 
   // the boards mapped from the server
-  const boardOptions = boardList.map(board => (
+  const boardOptions = Array.isArray(boardList) && boardList.map(board => (
     <DropdownItem link="#" onClick={() => handleBoardSelect(board._id)}>{board.name}</DropdownItem>
   ));
+  
 
   return (
     <nav className={`navbar`}>
@@ -55,20 +59,20 @@ const Navbar = ({ isDarkMode, setIsDarkMode }) => {
         </NavItem>
         <input type="text" name="input-box" />
        
-        {/* <NavItem>
+        <NavItem>
           <DropdownMenu>
             {boardOptions}
           </DropdownMenu>
-        </NavItem> */}
+        </NavItem>
 
-        <NavItem>
+        {/* <NavItem>
           <DropdownMenu>
             <DropdownItem link="/table1">Table 1</DropdownItem>
             <DropdownItem link="/table2">Table 2</DropdownItem>
             <DropdownItem link="/table3">Table 3</DropdownItem>
             <DropdownItem link="/table4">Table 4</DropdownItem>
           </DropdownMenu>
-        </NavItem>
+        </NavItem> */}
 
         <li className="theme-toggle">
           <button onClick={handleThemeToggle}>

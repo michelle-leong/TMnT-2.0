@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import UserContext from "../UserContext";
+import UserContext from "../UserContext.jsx";
 import axios from "axios";
 
 function SignUpPage() {
@@ -12,6 +12,14 @@ function SignUpPage() {
   const [lastName, setLastName] = useState("");
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user !== null) {
+      console.log(user);
+      navigate('/home');
+    }
+  },[user]);
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -26,7 +34,7 @@ function SignUpPage() {
     })
       .then((response) => {
         setUser(response.data); // update user context with response data
-        navigate('/home')
+        // navigate('/home')
         console.log("user created and logged in on signuppage.jsx");
       })
       .catch((error) => {

@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import UserContext from "../UserContext";
+import UserContext from "../UserContext.jsx";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -28,6 +28,13 @@ function LoginPage() {
   //   }
   // }, []);
 
+  useEffect(() => {
+    if (user !== null) {
+      console.log('User context:', user);
+      navigate('/home');
+    }
+  }, [user]);
+
   // handle login
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -36,13 +43,17 @@ function LoginPage() {
     axios.post('/api/users/login', loginData, {
       headers: { "Content-Type": "application/json" },
     })
-    .then((response) => {
-      setUser(response.data);
-      navigate('/home');
+    .then((res) => {
+      const newUser = res.data;
+      console.log(newUser);
+      setUser(newUser);
+      setUsername("");
+      setPassword("");
+      console.log(user);
     })
     .catch((error) => {
-      console.log("Incorrect username or password", error);
-      setPassword(""); // resets password to blank
+      console.log(error);
+      alert(error.response.data);
     });
   };
 
