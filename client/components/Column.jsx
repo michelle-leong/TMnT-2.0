@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { useState, useEffect } from "react";
 import Card from "./Card.jsx";
 import { CardModal } from "./Modals.jsx";
+import {Droppable} from 'react-beautiful-dnd';
 
 /**
  * {
@@ -52,7 +53,7 @@ export default function Column ({ column, setColumns }) {
       return newState;
     });
   }
-
+  console.log('cards', cards);
   // open up add card modal form
   const toggle = () => {
     console.log('toggled Add Card Modal');
@@ -66,20 +67,23 @@ export default function Column ({ column, setColumns }) {
    */
 
   // render array of card objects prop drilling card info
-  const renderCards = cardArray.map((cardObj) => (
-    <Card 
-      key={cardObj.card_id} 
+  const renderCards = cards.map((cardObj, index) => (
+    <Card
+      dropIndex={index}
+      key={cardObj._id} 
       card={cardObj}
       setCards={setCards}
     />
   ));
-
+  console.log(renderCards)
   /**
    * TODO column titles should be an input similar 
    * to the board title, so they can be changed and updated
    */
   return (
-    <div className='columnCont'>
+    <Droppable droppableId={column_id.toString()}>
+    {(provided) => (
+    <div className='columnCont' ref={provided.innerRef} {...provided.droppableProps}>
       <div className="modal-box">
         {showCardModal && 
           <CardModal
@@ -93,11 +97,14 @@ export default function Column ({ column, setColumns }) {
       <div>{column_name} {column_id}</div>
       <div className='cardCont'>
         {renderCards}
+      {provided.placeholder}
       </div>
       <div className="modal-button-cont">
         <button className="btn" onClick={toggle}>Add Card</button>
         <button className="btn" onClick={handleDelete}>Delete Column</button>
       </div>
     </div>
+    )}
+    </Droppable>
   );
 }
