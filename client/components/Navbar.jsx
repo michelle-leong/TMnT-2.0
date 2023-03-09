@@ -17,6 +17,7 @@ const Navbar = ({ isDarkMode, setIsDarkMode, currBoardID, setCurrBoardID }) => {
     axios.post('/api/users/getBoards', { id: user._id })
       .then(res => {
         setBoardList(res.data);
+        setCurrBoardID(boardList[0]);
         console.log(user);
       })
       .catch(error => console.error(error));
@@ -47,6 +48,7 @@ const Navbar = ({ isDarkMode, setIsDarkMode, currBoardID, setCurrBoardID }) => {
   ));
   
   // show board 1 in currBoardId
+
 
   return (
     <nav className={`navbar`}>
@@ -123,6 +125,7 @@ const NavItem = ({ link, activeLink, handleLinkClick, children }) => {
 
 function DropdownMenu(props) {
   const [open, setOpen] = useState(false);
+  const { user } = useContext(UserContext);
 
   const handleCreateBoard = () => {
     axios.post('/api/board/create', {
@@ -133,9 +136,10 @@ function DropdownMenu(props) {
       // handle the response data here
       console.log(response.data);
       // Add the newly created board to the board list
-      (response.data);
-      // show lastest board created on homepage using setCurrBoardID from res.data.
-
+      const newBoard = response.data;
+      props.setBoardList([...props.boardList, newBoard]);
+      // Set the latest created board as the current board
+      props.setCurrBoardID(newBoard._id);
     })
     .catch(error => {
       // handle errors here
@@ -143,16 +147,18 @@ function DropdownMenu(props) {
     });
   };
   
-  
   const handleMenuClick = (event) => {
     event.preventDefault();
     setOpen(!open);
   };
 
+  const handleBoardSelect = (boardID) => {
+    props.setCurrBoardID(boardID);
+  };
 
   return (
     <div className="dropdown">
-      <a href="#" onClick={() => setOpen(!open)}>Profile</a>
+      ...
       {open && (
         <ul className="dropdown-menu">
           {props.children}
@@ -175,8 +181,6 @@ function DropdownMenu(props) {
 
 
 function DropdownItem(props) {
-  // show lastest board created on homepage using setCurrBoardID
-
   return (
     <li>
       <Link
@@ -184,7 +188,8 @@ function DropdownItem(props) {
         className="dropdown-link"
         onClick={() => {
           props.setOpen(false);
-          handleBoardSelect(props.boardID);
+          props.handleBoardSelect(props.boardID);
+          props.setCurrBoardID(props.boardID);
         }}
       >
         {props.children}
@@ -192,7 +197,6 @@ function DropdownItem(props) {
     </li>
   );
 }
-
 
 
 export default Navbar;

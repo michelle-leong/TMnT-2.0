@@ -90,7 +90,7 @@ userController.verifyUser = async (req, res, next) => {
         });
       } else {
         res.locals.user = queryResponse[0];
-        req.session.username = res.locals.user.username;
+        // req.session.username = res.locals.user.username;
         return next();
       }
     });

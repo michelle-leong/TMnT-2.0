@@ -87,7 +87,7 @@ function Board ({ currBoardID }) {
     console.log('toggled Add Column Modal');
     setShowColumnModal(!showColumnModal);
   }
-  console.log(`board ${_id} columns: ${columns}`);
+  // console.log(`board ${_id} columns: ${columns}`);
   // render array of column objects prop drilling column info
   const renderColumns = columns.map((columnObj) => (
     <Column 
@@ -123,7 +123,7 @@ const onDragEnd = (result) => {
             showColumnModal={showColumnModal}
             setShowColumnModal={setShowColumnModal}
             setColumns={setColumns}
-            board_id={_id}
+            // board_id={_id}
           />
         }
       </div>
