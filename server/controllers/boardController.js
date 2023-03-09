@@ -59,8 +59,6 @@ boardController.deleteBoard = async (req, res, next) => {
 };
 
 boardController.joinUsernBoard = async (req, res, next) => {
-  // console.log('running boardController.getBoard. res.locals: ', res.locals);
-
   try {
     const userId = req.body.id;
     const boardId = res.locals.board[0]._id;
