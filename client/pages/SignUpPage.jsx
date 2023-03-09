@@ -1,23 +1,40 @@
-import React, { Component } from "react";
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import UserContext from "../UserContext.jsx";
+import axios from "axios";
 
 function SignUpPage() {
   // same TODOs as login, instead navigate to '/'
-  const [user, setUser] = useState("");
+  const { user, setUser } = useContext(UserContext); // from the UserContext state
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoggedIn, setLogin] = useState(false);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user !== null) {
+      console.log(user);
+      navigate('/home');
+    }
+  },[user]);
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const loginData = { username: user, password: password };
-    fetch("/signup", {
-      method: "POST",
+    const loginData = {
+      username: username,
+      password: password,
+      firstName: firstName,
+      lastName: lastName
+    };
+    axios.post('/api/users/signup', loginData, {
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(loginData),
     })
-      .then((res) => {
-        setLogin(true);
+      .then((response) => {
+        setUser(response.data); // update user context with response data
+        // navigate('/home')
         console.log("user created and logged in on signuppage.jsx");
       })
       .catch((error) => {
@@ -39,7 +56,7 @@ function SignUpPage() {
               className="user-input"
               type="text"
               required
-              onChange={(e) => setUser(e.target.value)}
+              onChange={(e) => setUsername(e.target.value)}
             />
           </div>
           <div className="formLine">
@@ -53,12 +70,33 @@ function SignUpPage() {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+          <div className="formLine">
+            <label className="login-text" htmlFor="firstName">
+              First Name
+            </label>
+            <input
+              className="user-input"
+              type="text"
+              required
+              onChange={(e) => setFirstName(e.target.value)}
+            />
+          </div>
+          <div className="formLine">
+            <label className="login-text" htmlFor="lastName">
+              Last Name
+            </label>
+            <input
+              className="user-input"
+              type="text"
+              required
+              onChange={(e) => setLastName(e.target.value)}
+            />
+          </div>
           <button className="submit">Submit</button>
         </form>
         <div className="login-footer">
           Already have an account? <Link to="/">Sign in here!</Link>
         </div>
-        {isLoggedIn && <HomePage />}
       </div>
     </div>
   );
