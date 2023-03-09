@@ -10,7 +10,7 @@ export default function Card ({ card, setCards, dropIndex }) {
     console.log('axios deleted card');
     setCards(cardsState => {
       const newState = cardsState.map(obj => ({...obj}));
-      const index = newState.indexOf(_id);
+      const index = newState.indexOf(card_id);
       newState.splice(index, 1);
       return newState;
     });
