@@ -37,6 +37,7 @@ userController.createUser = async (req, res, next) => {
     RETURNING *`;
     const response = await pool.query(queryString);
     res.locals.user = response.rows[0];
+    req.session.username = res.locals.user.username;
     return next();
   } catch (err) {
     return next({
@@ -89,6 +90,7 @@ userController.verifyUser = async (req, res, next) => {
         });
       } else {
         res.locals.user = queryResponse[0];
+        req.session.username = res.locals.user.username;
         return next();
       }
     });

@@ -8,8 +8,8 @@ const router = express.Router();
 router.post(
   '/login',
   userController.verifyUser,
-  cookieController.setSSIDCookie,
-  sessionController.startSession,
+  // cookieController.setSSIDCookie,
+  // sessionController.startSession,
   (req, res) => {
     // what should happen here on successful log in?
     return res.status(200).json(res.locals.user);
@@ -20,8 +20,8 @@ router.post(
 router.post(
   '/signup',
   userController.createUser,
-  cookieController.setSSIDCookie,
-  sessionController.startSession,
+  // cookieController.setSSIDCookie,
+  // sessionController.startSession,
   (req, res) => {
     // what should happen here on successful log in?
     // res.redirect('/secret');
@@ -33,15 +33,21 @@ router.post(
 // res with all boards for the user
 router.post(
   '/getBoards',
-  sessionController.isLoggedIn,
+  // sessionController.isLoggedIn,
   userController.getBoards,
   (req, res) => {
     return res.status(200).send(res.locals.allBoards);
   }
 );
 
-router.post('/logout', sessionController.deleteSession, (req, res) => {
-  return res.sendStatus(200);
+router.get('/logout', (req, res) => {
+  req.session.destroy((err) => {
+    if (err) console.log(err);
+    else {
+      // req.end();
+      return res.status(200).send('destroyed session');
+    }
+  });
 });
 
 module.exports = router;
