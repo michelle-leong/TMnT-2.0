@@ -109,11 +109,9 @@ boardController.getBoard = async (req, res, next) => {
   } catch (err) {
     return next({
       log: 'error in boardController.getBoards',
-      message: { err: `boardController.getBoards ${err}`},
+      message: { err: `boardController.getBoards ${err}` },
     });
   }
 };
 
 module.exports = boardController;
-
-

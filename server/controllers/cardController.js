@@ -25,8 +25,9 @@ cardController.createCard = async (req, res, next) => {
 };
 
 cardController.updateCard = async (req, res, next) => {
+  console.log(req.body);
   try {
-    const cardId = req.body.id;
+    const cardId = req.body.card_id;
     const newTask = req.body.task;
     const queryString = `UPDATE cards
     SET task = '${newTask}'

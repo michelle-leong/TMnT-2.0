@@ -25,31 +25,31 @@ app.use(cors());
 // handle requests for static files (bundle.js)
 app.use('/build', express.static(path.resolve(__dirname, '../build')));
 
-// const currSession = {
-//   secret: 'supersecret',
-//   saveUninitialized: true,
-//   cookie: { maxAge: 120000, secure: false },
-//   resave: false,
-// };
+const currSession = {
+  secret: 'supersecret',
+  saveUninitialized: true,
+  cookie: { maxAge: 120000, secure: false },
+  resave: false,
+};
 
-// app.set('trust proxy', 1);
+app.set('trust proxy', 1);
 
-// app.use(sessions(currSession));
+app.use(sessions(currSession));
 
 // route handlers
 app.use('/api/users', UserRouter);
 
-// app.use('/api', (req, res, next) => {
-//   if (!req.session.username) {
-//     // res.redirect('http://localhost:3000/api/user/login');
-//     return next({
-//       log: 'no session found',
-//       message: { err: 'no session found' },
-//     });
-//   } else {
-//     return next();
-//   }
-// });
+app.use('/api', (req, res, next) => {
+  if (!req.session.username) {
+    // res.redirect('/user/login');
+    return next({
+      log: 'no session found',
+      message: { err: 'no session found' },
+    });
+  } else {
+    return next();
+  }
+});
 app.use('/api/boards', BoardRouter);
 app.use('/api/columns', ColumnRouter);
 app.use('/api/cards', CardRouter);
