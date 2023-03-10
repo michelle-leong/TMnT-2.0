@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Card from "./Card.jsx";
 import { CardModal } from "./Modals.jsx";
 import {Droppable} from 'react-beautiful-dnd';
+import axios from 'axios';
 
 /**
  * {
@@ -53,14 +54,21 @@ export default function Column ({ columns ,column, setColumns, key }) {
   const handleDelete = () => {
     console.log('axios deleted Column', column_id);
     // console.log('key', key);
-    setColumns(columnsState => {
-      const newState = columnsState.map(obj => ({...obj}));
-      const index = newState.findIndex((colObj) => colObj.column_id === column_id); // find column at index
-      newState.splice(index, 1); // remove at index
-      return newState;
-    });
+    axios.delete(`/api/columns/delete`, {
+      data: {id: column_id},
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          setColumns(columnsState => {
+            const newState = columnsState.map(obj => ({...obj}));
+            const index = newState.findIndex((colObj) => colObj.column_id === column_id); // find column at index
+            newState.splice(index, 1); // remove at index
+            return newState;
+          });
+        }
+      })
   }
-  console.log('cards', cards);
+  // console.log('cards', cards);
   // open up add card modal form
   const toggle = () => {
     console.log('toggled Add Card Modal');
@@ -74,7 +82,7 @@ export default function Column ({ columns ,column, setColumns, key }) {
    */
 
   // render array of card objects prop drilling card info
-  console.log(`${column_id}'s cardArray : ${cardArray}`);
+  // console.log(`${column_id}'s cardArray : ${cardArray}`);
   const renderCards = cardArray.map((cardObj, index) => (
     <Card
       dropIndex={index}
@@ -83,13 +91,13 @@ export default function Column ({ columns ,column, setColumns, key }) {
       setCards={setCards}
     />
   ));
-  console.log(renderCards)
+  // console.log(renderCards)
   /**
    * TODO column titles should be an input similar 
    * to the board title, so they can be changed and updated
    */
   return (
-    <Droppable droppableId={column_id.toString()}>
+    <Droppable key={column_id} droppableId={column_id.toString()}>
     {(provided) => (
     <div className='columnCont' ref={provided.innerRef} {...provided.droppableProps}>
       <div className="modal-box">

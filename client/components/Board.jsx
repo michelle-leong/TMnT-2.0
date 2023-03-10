@@ -1,11 +1,13 @@
-import React, { Component } from 'react';
-import { useState, useEffect } from 'react';
+import React, { Component } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from 'axios';
-import { DragDropContext } from 'react-beautiful-dnd';
+import {DragDropContext} from 'react-beautiful-dnd';
+
 
 // components
-import Column from './Column.jsx';
-import { ColumnModal } from './Modals.jsx';
+import Column from "./Column.jsx";
+import { ColumnModal } from "./Modals.jsx";
+import BoardContext from "../pages/BoardContext.jsx";
 
 /**
  * [
@@ -53,31 +55,28 @@ import { ColumnModal } from './Modals.jsx';
  * @param {props = {board : array[0].board = board object}} param0
  * @returns
  */
-function Board({ currBoardID }) {
-  // const { _id, name } = board
-  // placeholder data
-  const name = 'myBoard';
-
+function Board () {
+  const {currBoardID, setCurrBoardID} = useContext(BoardContext);
   const [showColumnModal, setShowColumnModal] = useState(false);
   const [columns, setColumns] = useState([]);
 
+  const [update, setUpdate] = useState(true);
+  
   useEffect(() => {
-    axios
-      .get(`api/boards/${currBoardID}`)
-      .then((response) => {
+    if(update) {
+      axios.get(`api/boards/${currBoardID}`)
+      .then(response => {
         if (response.status === 200) {
           const currentBoard = response.data[0].board;
-          console.log(currentBoard);
           // update columns array with get data
-          setColumns((columnsState) => {
-            const newState = currentBoard.columns;
-            return newState;
-          });
+          setColumns(currentBoard.columns);
+          setCurrBoardID(currBoardID);
         }
       })
-      .catch((error) => {
-        console.error('An error occured in fetching currBoard');
-      });
+      .catch(error => {
+        console.error("An error occured in fetching currBoard");
+      })
+    }
     // empty array dependency, so this runs only on mount
   }, []);
 
@@ -89,8 +88,7 @@ function Board({ currBoardID }) {
   const toggle = () => {
     console.log('toggled Add Column Modal');
     setShowColumnModal(!showColumnModal);
-  };
-  // console.log(`board ${_id} columns: ${columns}`);
+  }
   // render array of column objects prop drilling column info
   const renderColumns = columns.map((columnObj) => (
     <Column
@@ -163,23 +161,21 @@ function Board({ currBoardID }) {
   // TODO board DELETE button
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className='column-container'>
-        <div className='modal-box'>
-          {showColumnModal && (
-            <ColumnModal
-              showColumnModal={showColumnModal}
-              setShowColumnModal={setShowColumnModal}
-              setColumns={setColumns}
-              // board_id={_id}
-            />
-          )}
-        </div>
-        {renderColumns}
-        <div>
-          <button className='addColumn' onClick={toggle}>
-            ADD COLUMN
-          </button>
-        </div>
+    <div className="column-container">
+      <div className="modal-box">
+        {showColumnModal && 
+          <ColumnModal
+            showColumnModal={showColumnModal}
+            setShowColumnModal={setShowColumnModal}
+            setColumns={setColumns}
+            setUpdate={setUpdate}
+            currBoardID={currBoardID}
+          />
+        }
+      </div>
+      {renderColumns}
+      <div>
+        <button className="addColumn" onClick={toggle}>ADD COLUMN</button>
       </div>
     </DragDropContext>
   );

@@ -86,7 +86,7 @@ boardController.getBoard = async (req, res, next) => {
           jsonb_build_object(
               'column_id', c._id,
               'column_name', c.name,
-              'cards', (
+              'cards', COALESCE((
                   SELECT jsonb_agg(
                       jsonb_build_object(
                           'card_id', cd._id,
@@ -95,7 +95,7 @@ boardController.getBoard = async (req, res, next) => {
                   )
                   FROM cards cd
                   WHERE cd.column_id = c._id
-              )
+              ), '[]'::jsonb)
           )
       )
   ) AS board
@@ -115,3 +115,5 @@ boardController.getBoard = async (req, res, next) => {
 };
 
 module.exports = boardController;
+
+
