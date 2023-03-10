@@ -1,40 +1,40 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-
+import React, { useState, useContext } from "react";
+import BoardContext from "../../pages/BoardContext.jsx";
+import UserContext from "../../UserContext.jsx";
+import axios from "axios";
 
 function DropdownMenu(props) {
   const [open, setOpen] = useState(false);
+  const { user } = useContext(UserContext);
+  const { currBoardID, setCurrBoardID } = useContext(BoardContext);
 
   const handleCreateBoard = () => {
-    fetch('/board/create', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        // include any data you need to send with the request
-      })
+    axios.post('/api/boards/create', {
+      name: 'New Board', // You can replace this with any name you want for the new board
+      id: user._id 
     })
-      .then(response => response.json())
-      .then(data => {
-        // handle the response data here
-        console.log(data);
-      })
-      .catch(error => {
-        // handle errors here
-        console.error(error);
-      });
+    .then(response => {
+      // handle the response data here
+      console.log(response.data);
+      // Add the newly created board to the board list
+      const newBoard = response.data;
+      
+      // Set the latest created board as the current board
+      setCurrBoardID(newBoard._id);
+    })
+    .catch(error => {
+      // handle errors here
+      console.error(error);
+    });
   };
 
-  const handleMenuClick = (event) => {
-    event.preventDefault();
+  const handleProfileClick = () => {
     setOpen(!open);
   };
-
-
+  
   return (
     <div className="dropdown">
-      <a href="#" onClick={() => setOpen(!open)}>Profile</a>
+      <span className="profile-link" onClick={handleProfileClick}>profile</span>
       {open && (
         <ul className="dropdown-menu">
           {props.children}
