@@ -48,17 +48,18 @@ import BoardContext from "../pages/BoardContext.jsx";
  *         }
  *     }
  * ]
- * 
+ *
  */
 /**
- * 
- * @param {props = {board : array[0].board = board object}} param0 
- * @returns 
+ *
+ * @param {props = {board : array[0].board = board object}} param0
+ * @returns
  */
 function Board () {
   const {currBoardID, setCurrBoardID} = useContext(BoardContext);
   const [showColumnModal, setShowColumnModal] = useState(false);
   const [columns, setColumns] = useState([]);
+
   const [update, setUpdate] = useState(true);
   
   useEffect(() => {
@@ -90,7 +91,7 @@ function Board () {
   }
   // render array of column objects prop drilling column info
   const renderColumns = columns.map((columnObj) => (
-    <Column 
+    <Column
       key={columnObj.column_id}
       column={columnObj}
       setColumns={setColumns}
@@ -99,46 +100,64 @@ function Board () {
   ));
 
   const onDragEnd = (result) => {
-    console.log(result)
-  
-    const {source, destination} = result;
-  
+    console.log(result);
+
+    const { source, destination } = result;
+
     if (!destination) return;
-    if (destination.droppableId === source.droppableId && destination.index === source.index) return;
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    )
+      return;
     let beginning;
     let landing;
-    let beginningIndex = source.droppableId;
-    let landingIndex = destination.droppableId;
-  
+    let beginningIndex;
+    let landingIndex;
+
     columns.forEach((ele, index) => {
-      if (ele.column_id.toString() === source.droppableId){
+      if (ele.column_id.toString() === source.droppableId) {
         beginning = ele;
         beginningIndex = index;
-      } 
-      if (ele.column_id.toString() === destination.droppableId){
+      }
+      if (ele.column_id.toString() === destination.droppableId) {
+        landingIndex = index;
         landing = ele;
-        landingIndex = index
-      } 
-    })
-  
+      }
+    });
+    const cardCopy = { ...beginning.cards[source.index] };
+
     //create a copy of the card
-    const cardCopy = {...beginning.cards[source.index]}
     setColumns((prevState) => {
       //copy previous state
       prevState = [...prevState];
-    
-      //remove card from old column
-      prevState[beginningIndex].cards.splice(source.index, 1)
-    
-      //add card to new column
-      prevState[landingIndex].cards.splice(destination.index, 0, cardCopy)
-      return prevState;
-    })
-  
-    
-  }
 
-  
+      //remove card from old column
+      prevState[beginningIndex].cards.splice(source.index, 1);
+
+      //add card to new column
+      prevState[landingIndex].cards.splice(destination.index, 0, cardCopy);
+      return prevState;
+    });
+
+    let columnId = landing.column_id;
+    axios
+      .patch(`/api/cards/moveCard`, {
+        id: cardCopy.card_id,
+        columnId: columnId,
+      })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Error caught when updating card!!!');
+        } else {
+          console.log(response);
+        }
+      })
+      .catch((err) => {
+        console.error('Error caught when updating card');
+      });
+  };
+
   // TODO board DELETE button
   return (
     <DragDropContext onDragEnd={onDragEnd}>
@@ -158,16 +177,15 @@ function Board () {
       <div>
         <button className="addColumn" onClick={toggle}>ADD COLUMN</button>
       </div>
-    </div>
     </DragDropContext>
-  )
+  );
 }
 
 export default Board;
 
 // board should get all cols
-  // cols should get all its cards
-    // cards fill out with all their data
+// cols should get all its cards
+// cards fill out with all their data
 
 // delete board -> delete all columns (single query)
 // delete column ->  delete all associated cards  (single query)

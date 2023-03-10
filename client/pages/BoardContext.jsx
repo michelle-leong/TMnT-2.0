@@ -2,9 +2,7 @@ import React from "react";
 
 const BoardContext = React.createContext({
   currBoardID: null,
-  setCurrBoardID: () => {},
-}
-);
-
+  setCurrBoardID: () => {}
+});
 
 export default BoardContext;

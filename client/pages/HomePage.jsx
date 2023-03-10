@@ -15,7 +15,7 @@ import UserContext from "../UserContext.jsx";
 
 const HomePage = () => {
   // temp setting as board 2 for testing
-  const [ currBoardID, setCurrBoardID] = useState(2);
+  const [ currBoardID, setCurrBoardID] = useState();
   const [isDarkMode, setIsDarkMode] = useState(false);
   const { user, setUser } = useContext(UserContext);
 
