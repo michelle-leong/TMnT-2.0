@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
-// import { CardModal } from './Modals.jsx';
+import { CardModal } from './Modals.jsx';
 import axios from 'axios';
 
 export default function Card({ card, setCards, dropIndex }) {

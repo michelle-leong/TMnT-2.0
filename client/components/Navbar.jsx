@@ -2,7 +2,6 @@ import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import UserContext from '../UserContext.jsx';
 import BoardContext from '../pages/BoardContext.jsx';
-import NavItem from './navbar/NavItem.jsx';
 import DropdownItem from './navbar/DropdownItem.jsx';
 import DropdownMenu from './navbar/DropdownMenu.jsx';
 

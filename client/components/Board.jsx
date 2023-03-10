@@ -68,7 +68,12 @@ function Board() {
         if (response.status === 200) {
           const currentBoard = response.data[0].board;
           // update columns array with get data
-          setColumns(currentBoard.columns);
+          console.log('columns', currentBoard.columns);
+          if (currentBoard.columns === null) {
+            setColumns([]);
+          } else {
+            setColumns(currentBoard.columns);
+          }
           setCurrBoardID(currBoardID);
         }
       })
