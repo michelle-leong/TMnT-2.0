@@ -1,11 +1,13 @@
 import React, { Component } from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from 'axios';
 import {DragDropContext} from 'react-beautiful-dnd';
+
 
 // components
 import Column from "./Column.jsx";
 import { ColumnModal } from "./Modals.jsx";
+import BoardContext from "../pages/BoardContext.jsx";
 
 /**
  * [
@@ -53,33 +55,29 @@ import { ColumnModal } from "./Modals.jsx";
  * @param {props = {board : array[0].board = board object}} param0 
  * @returns 
  */
-function Board ({ currBoardID }) {
-// const { _id, name } = board
-  // placeholder data
-  const name = 'myBoard';
-  
+function Board () {
+  const {currBoardID, setCurrBoardID} = useContext(BoardContext);
   const [showColumnModal, setShowColumnModal] = useState(false);
   const [columns, setColumns] = useState([]);
+  const [update, setUpdate] = useState(true);
   
   useEffect(() => {
-    axios.get(`api/boards/${currBoardID}`)
-    .then(response => {
-      if (response.status === 200) {
-        const currentBoard = response.data[0].board;
-        console.log(currentBoard);
-        // update columns array with get data
-        setColumns(columnsState => {
-          const newState = currentBoard.columns;
-          return newState;
-        });
-      }
-    })
-    .catch(error => {
-      console.error("An error occured in fetching currBoard");
-    })
+    if(update) {
+      axios.get(`api/boards/${currBoardID}`)
+      .then(response => {
+        if (response.status === 200) {
+          const currentBoard = response.data[0].board;
+          // update columns array with get data
+          setColumns(currentBoard.columns);
+          setCurrBoardID(currBoardID);
+        }
+      })
+      .catch(error => {
+        console.error("An error occured in fetching currBoard");
+      })
+    }
     // empty array dependency, so this runs only on mount
   }, []);
-
 
   // const handleDelete = () => {
   //   console.log('axios deleted Board');
@@ -90,7 +88,6 @@ function Board ({ currBoardID }) {
     console.log('toggled Add Column Modal');
     setShowColumnModal(!showColumnModal);
   }
-  // console.log(`board ${_id} columns: ${columns}`);
   // render array of column objects prop drilling column info
   const renderColumns = columns.map((columnObj) => (
     <Column 
@@ -101,46 +98,45 @@ function Board ({ currBoardID }) {
     />
   ));
 
-const onDragEnd = (result) => {
-  console.log(result)
-
-  const {source, destination} = result;
-
-  if (!destination) return;
-  if (destination.droppableId === source.droppableId && destination.index === source.index) return;
-  let beginning;
-  let landing;
-  let beginningIndex = source.droppableId;
-  let landingIndex = destination.droppableId;
-
-  columns.forEach((ele, index) => {
-    if (ele.column_id.toString() === source.droppableId){
-      beginning = ele;
-      beginningIndex = index;
-    } 
-    if (ele.column_id.toString() === destination.droppableId){
-      landing = ele;
-      landingIndex = index
-    } 
-  })
-
-
-  //create a copy of the card
-  const cardCopy = {...beginning.cards[source.index]}
-  setColumns((prevState) => {
-    //copy previous state
-    prevState = [...prevState];
-
-    //remove card from old column
-    prevState[beginningIndex].cards.splice(source.index, 1)
-
-    //add card to new column
-    prevState[landingIndex].cards.splice(destination.index, 0, cardCopy)
-    return prevState;
-  })
-
+  const onDragEnd = (result) => {
+    console.log(result)
   
-}
+    const {source, destination} = result;
+  
+    if (!destination) return;
+    if (destination.droppableId === source.droppableId && destination.index === source.index) return;
+    let beginning;
+    let landing;
+    let beginningIndex = source.droppableId;
+    let landingIndex = destination.droppableId;
+  
+    columns.forEach((ele, index) => {
+      if (ele.column_id.toString() === source.droppableId){
+        beginning = ele;
+        beginningIndex = index;
+      } 
+      if (ele.column_id.toString() === destination.droppableId){
+        landing = ele;
+        landingIndex = index
+      } 
+    })
+  
+    //create a copy of the card
+    const cardCopy = {...beginning.cards[source.index]}
+    setColumns((prevState) => {
+      //copy previous state
+      prevState = [...prevState];
+    
+      //remove card from old column
+      prevState[beginningIndex].cards.splice(source.index, 1)
+    
+      //add card to new column
+      prevState[landingIndex].cards.splice(destination.index, 0, cardCopy)
+      return prevState;
+    })
+  
+    
+  }
 
   
   // TODO board DELETE button
@@ -153,7 +149,8 @@ const onDragEnd = (result) => {
             showColumnModal={showColumnModal}
             setShowColumnModal={setShowColumnModal}
             setColumns={setColumns}
-            // board_id={_id}
+            setUpdate={setUpdate}
+            currBoardID={currBoardID}
           />
         }
       </div>

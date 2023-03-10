@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
+import BoardContext from "../pages/BoardContext.jsx";
 
 import Column from './Column.jsx'
 
@@ -10,61 +11,44 @@ import Column from './Column.jsx'
  * columns : array[] of column objects
  * board_id : Number
  */
+
 export const ColumnModal = ({ 
-    showColumnModal, 
-    setShowColumnModal, 
-    setColumns,
-    board_id
-  }) => {
+  showColumnModal, 
+  setShowColumnModal, 
+  setColumns,
+  setUpdate
+}) => {
+  const {currBoardID, setCurrBoardId} = useContext(BoardContext)
 
   const [name, setName] = useState('');
-  
   const handleAdd = () => {
+    console.log('board_id', currBoardID)
     const newColumn = {
-      name,
-      board_id
+      name: name,
+      board_id: currBoardID
     };
-    
-    console.log('axios create column');
-    // axios will return a column with an _id
-    // push that column with the _id onto our array
-    // for now pushing the newColumn object
-    // temporary add column
-    axios.post('api/columns/new', {
-      "board_id": "2",
-      "name": "teset1234"
-    })
+        
+    axios.post('api/columns/new', newColumn)
       .then((response) => {
-        if (!response.ok) {
+        if (response.status !== 200) {
           throw new Error("Error caught when creating new column!!!");
         } 
-        setColumns(prevColumns => {
-          const addColumn = {
-            column_id: response._id,
-            column_name: response.name,
-            board_id: response.board_id
-          };
 
-          return [...prevColumns, addColumn];
-        });
+        setColumns(columnsState => {
+          const newState = columnsState.map(obj => ({...obj}));
+          newState.push({
+            column_id: response.data._id,
+            column_name: response.data.name,
+            board_id: response.data.board_id
+          });
+          return newState;
+          });
       })
       .catch((err) => {
-        console.error("Error caught when creating new column");
+        console.error("Error caught when creating new column " + err);
       })
 
-    // setColumns(columnsState => {
-    //   const newState = columnsState.map(obj => ({...obj}));
-    //   newState.push({
-    //     column_id: 999,
-    //     column_name: newColumn.name,
-    //     board_id
-    //   });
-    //   return newState;
-    // });
-    
-
     setShowColumnModal(!showColumnModal);
-    // setShowCardModal(!showCardModal);
   }
 
 
@@ -83,7 +67,10 @@ export const ColumnModal = ({
           type="text"
           // required
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={(e) =>{
+            setName(e.target.value);
+            return console.log('name', name);
+          }}
           placeholder="column name"
         />
       </form>
@@ -133,25 +120,26 @@ export const CardModal = ({
       columnId
     };
 
-    console.log(`
-    newCard.task: ${newCard.task}\n
-    newCard.columnId: ${newCard.columnId}
-    `);
     console.log('axios create card');
-    // axios will return a card with an _id
-      // push that card with the _id onto our array
-      // for now pushing the newcard object
-    // dummy addCard
-    const addCard = {
-      card_id: 999,
-      card_task: newCard.task
-    }
-    
-    setCards(cardsState => {
-      const newState = cardsState.map(obj => ({...obj}));
-      newState.push(addCard);
-      return newState;
-    });
+
+    axios.post('api/cards/create', newCard)
+    .then((response) => {
+      if (response.status !== 200) {
+        throw new Error("Error caught when creating new cards!!!");
+      } 
+      setCards(cardsState => {
+        const newState = cardsState.map(obj => ({...obj}));
+        newState.push({
+          card_id: response.data._id,
+          card_task: response.data.task,
+          column_id: response.data.column_id,
+        });
+        return newState;
+        });
+    })
+    .catch((err) => {
+      console.error("Error caught when creating new card " + err);
+    })
 
     setShowCardModal(!showCardModal);
   }
@@ -190,4 +178,85 @@ export const CardModal = ({
         </div>
     </div>
   )
+}
+
+export const UpdateCardModal = ({ 
+  showUpdateCardModal, 
+  setShowUpdateCardModal, 
+  setCards, 
+}) => {
+
+const [task, setTask] = useState(''); 
+
+/**
+ * TODO error checking for empty strings 
+ * they were using required but it doesn't
+ * function without a submit in the form
+ */
+const handleUpdate = () => {
+  const updateCard = {
+    task,
+    card_id
+  };
+
+  console.log(`
+  newCard.task: ${updateCard.task}\n
+  newCard.card_id: ${updateCard.card_id}
+  `);
+
+  axios.patch('api/cards/update', updateCard)
+  .then((response) => {
+    if (response.status !== 200) {
+      throw new Error("Error caught when updating new cards!!!");
+    } 
+    setCards(cardsState => {
+      const newState = cardsState.map(obj => ({...obj}));
+      newState.push({
+        card_id: response.data._id,
+        card_task: response.data.task,
+        column_id: response.data.column_id,
+      });
+      return newState;
+      });
+  })
+  .catch((err) => {
+    console.error("Error caught when updating new card " + err);
+  })
+  setShowUpdateCardModal(!showUpdateCardModal);
+}
+
+const handleCancel = () => {
+  setShowUpdateCardModal(!showUpdateCardModal);
+}
+
+return (
+  <div className="modal-home">
+      <form className='modal-form'>
+        <h1>ADD CARD</h1>
+        <input 
+          className="card-modal-input"
+          type="text"
+          value={task}
+          onChange={(e) => setTask(e.target.value)}
+          // required
+          placeholder="add a task"
+          // do we want an onChange here or wait until the input is finished
+        />
+      </form>
+      <div className='modal-button-cont'>
+        <button 
+          className="modal-text-button"
+          onClick={handleUpdate}
+        >
+          UPDATE
+        </button>
+        <button 
+          className="modal-text-button"
+          onClick={handleCancel}
+        >
+          CANCEL
+        </button>
+      </div>
+  </div>
+)
 }

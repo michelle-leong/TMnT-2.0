@@ -12,7 +12,7 @@ const Navbar = ({ isDarkMode, setIsDarkMode }) => {
   const { user } = useContext(UserContext);
   const [boardList, setBoardList] = useState([]);
   const { currBoardID, setCurrBoardID } = useContext(BoardContext);
-  
+  // const [currBoardID, setCurrBoardID] = useState(null);
   
   // fetch call to grab all boards for the user
   useEffect(() => {

@@ -1,19 +1,28 @@
 import React, { Component } from "react";
 import { Draggable } from "react-beautiful-dnd";
+import axios from 'axios';
 
 export default function Card ({ card, setCards, dropIndex }) {
 
   const { card_id, card_task, column_id} = card;
 
   const handleDelete = () => {
-    console.log(_id);
     console.log('axios deleted card');
-    setCards(cardsState => {
-      const newState = cardsState.map(obj => ({...obj}));
-      const index = newState.indexOf(card_id);
-      newState.splice(index, 1);
-      return newState;
-    });
+
+    axios.delete(`/api/cards/delete`, {
+      data: {id: card_id},
+    })
+      .then((response) => {
+        if (response.status === 200) {
+          setCards(cardsState => {
+            const newState = cardsState.map(obj => ({...obj}));
+            const index = newState.findIndex((cardObj) => cardObj.card_id === card_id);
+            newState.splice(index, 1);
+            return newState;
+          });
+        }})
+    
+
   }
 
   // open up update card modal form
