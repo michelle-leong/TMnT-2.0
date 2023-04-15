@@ -104,8 +104,6 @@ userController.verifyUser = async (req, res, next) => {
 
 userController.getBoards = async (req, res, next) => {
   try {
-    console.log('req.body', req.body.id);
-    console.log('middleware', req.originalUrl);
     const userId = req.body.id;
     const queryString = `SELECT boards._id, boards.name
     FROM users_boards
@@ -113,8 +111,8 @@ userController.getBoards = async (req, res, next) => {
     ON users_boards.board_id = boards._id
     WHERE user_id = ${userId}`;
     const boards = await pool.query(queryString);
-    console.log('board', boards);
-    res.locals.allBoards = boards;
+    res.locals.allBoards = boards.rows;
+    console.log(boards.rows);
     return next();
   } catch (err) {
     return next({

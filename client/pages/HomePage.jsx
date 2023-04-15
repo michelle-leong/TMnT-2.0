@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../components/Navbar.jsx';
 import UserContext from '../context/UserContext.jsx';
@@ -11,17 +11,15 @@ const HomePage = () => {
   const [userBoards, setUserBoards] = useState([]);
 
   // console.log(user);
-  axios
-    .post(
-      '/api/users/getBoards',
-      {
-        id: user,
-      },
-      {}
-    )
-    .then((res) => {
-      setUserBoards(res);
-    });
+  useEffect(() => {
+    axios
+      .post('/api/users/getBoards', {
+        id: user.id,
+      })
+      .then((res) => {
+        setUserBoards(res);
+      });
+  }, []);
 
   return (
     <div>

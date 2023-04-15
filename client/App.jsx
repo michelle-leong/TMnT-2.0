@@ -12,7 +12,13 @@ import UserContext from './context/UserContext.jsx';
 //password: testing1
 
 const App = () => {
-  const [user, setUser] = useState('testing');
+  const [user, setUser] = useState({
+    id: 18,
+    username: 'testing',
+    first_name: 'test',
+    last_name: 'test',
+  });
+  console.log(user);
   return (
     <UserContext.Provider value={{ user, setUser }}>
       <Router>
