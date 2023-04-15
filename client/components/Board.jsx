@@ -6,7 +6,7 @@ import { DragDropContext } from 'react-beautiful-dnd';
 // components
 import Column from './Column.jsx';
 import { ColumnModal } from './Modals.jsx';
-import BoardContext from '../pages/BoardContext.jsx';
+import BoardContext from '../context/BoardContext.jsx';
 
 /**
  * [

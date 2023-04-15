@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
-import UserContext from '../UserContext.jsx';
-import BoardContext from '../pages/BoardContext.jsx';
+import UserContext from '../context/UserContext.jsx';
+import BoardContext from '../context/BoardContext.jsx';
 import DropdownItem from './navbar/DropdownItem.jsx';
 import DropdownMenu from './navbar/DropdownMenu.jsx';
 
@@ -13,24 +13,19 @@ const Navbar = ({ isDarkMode, setIsDarkMode }) => {
   const [inputValue, setInputValue] = useState(currBoardName);
 
   // fetch call to grab all boards for the user
-  useEffect(() => {
-    axios
-      .post('/api/users/getBoards', { id: user._id })
-      .then((res) => {
-        const list = res.data.rows;
-        setBoardList(list);
-        // setCurrBoardID(list[0]._id);
-        const currentBoard = list.find((board) => board._id === currBoardID);
-        setCurrBoardName(currentBoard.name);
-        setInputValue(currentBoard.name);
-      })
-      .catch((error) => console.error(error));
-  }, [currBoardID]);
-
-  // darkmode
-  const handleThemeToggle = () => {
-    setIsDarkMode(!isDarkMode);
-  };
+  // useEffect(() => {
+  //   axios
+  //     .post('/api/users/getBoards', { id: user._id })
+  //     .then((res) => {
+  //       const list = res.data.rows;
+  //       setBoardList(list);
+  //       // setCurrBoardID(list[0]._id);
+  //       const currentBoard = list.find((board) => board._id === currBoardID);
+  //       setCurrBoardName(currentBoard.name);
+  //       setInputValue(currentBoard.name);
+  //     })
+  //     .catch((error) => console.error(error));
+  // }, [currBoardID]);
 
   // the boards mapped from the server
 
@@ -70,12 +65,6 @@ const Navbar = ({ isDarkMode, setIsDarkMode }) => {
         <button className='board-name-save-button' onClick={handleSaveClick}>
           Save
         </button>
-
-        <li className='theme-toggle'>
-          <button onClick={handleThemeToggle}>
-            {isDarkMode ? 'Light Mode' : 'Dark Mode'}
-          </button>
-        </li>
       </ul>
     </nav>
   );

@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import BoardContext from '../../pages/BoardContext.jsx';
+import BoardContext from '../../context/BoardContext.jsx';
 
 function DropdownItem({ boardID, boardName, close }) {
   const { currBoardID, setCurrBoardID } = useContext(BoardContext);

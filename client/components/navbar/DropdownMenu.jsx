@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
-import BoardContext from '../../pages/BoardContext.jsx';
-import UserContext from '../../UserContext.jsx';
+import BoardContext from '../../context/BoardContext.jsx';
+import UserContext from '../../context/UserContext.jsx';
 import axios from 'axios';
 
 import DropdownItem from './DropdownItem.jsx';

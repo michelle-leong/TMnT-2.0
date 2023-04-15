@@ -24,7 +24,7 @@ userController.createUser = async (req, res, next) => {
     const checkUserQuery = await pool.query(checkUser);
     if (checkUserQuery.rows.length) {
       return next({
-        log: 'userController.createUser',
+        log: 'userController.createUser: username must be unique',
         message: {
           err: 'userController.createUser: username must be unique',
         },
@@ -41,7 +41,7 @@ userController.createUser = async (req, res, next) => {
     return next();
   } catch (err) {
     return next({
-      log: 'userController.createUser',
+      log: 'ERROR in userController.createUser' + err,
       message: {
         err: 'userController.createUser' + err,
       },
@@ -60,7 +60,7 @@ userController.verifyUser = async (req, res, next) => {
         'Error in userController.verifyUser: username and password must be provided'
       );
       return next({
-        log: 'userController.createUser',
+        log: 'userController.createUser: username and password must be provided',
         message: {
           err: 'userController.createUser: username and password must be provided',
         },
@@ -104,6 +104,8 @@ userController.verifyUser = async (req, res, next) => {
 
 userController.getBoards = async (req, res, next) => {
   try {
+    console.log('req.body', req.body.id);
+    console.log('middleware', req.originalUrl);
     const userId = req.body.id;
     const queryString = `SELECT boards._id, boards.name
     FROM users_boards
@@ -111,11 +113,12 @@ userController.getBoards = async (req, res, next) => {
     ON users_boards.board_id = boards._id
     WHERE user_id = ${userId}`;
     const boards = await pool.query(queryString);
+    console.log('board', boards);
     res.locals.allBoards = boards;
     return next();
   } catch (err) {
     return next({
-      log: 'error in userController.getBoards',
+      log: 'error in userController.getBoards ' + err,
       message: {
         err: 'userController.getBoards' + err,
       },

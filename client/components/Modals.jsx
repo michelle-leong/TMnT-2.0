@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import BoardContext from '../pages/BoardContext.jsx';
+import BoardContext from '../context/BoardContext.jsx';
 
 import Column from './Column.jsx';
 
