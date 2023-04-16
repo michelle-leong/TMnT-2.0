@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { DragDropContext } from 'react-beautiful-dnd';
-
+import { useParams } from 'react-router-dom';
 // components
 import Column from './Column.jsx';
 import { ColumnModal } from './Modals.jsx';
@@ -55,15 +55,15 @@ import BoardContext from '../context/BoardContext.jsx';
  * @returns
  */
 const Board = () => {
-  const { currBoardID } = useContext(BoardContext);
+  const { currBoardID, setCurrBoardID } = useContext(BoardContext);
   const [showColumnModal, setShowColumnModal] = useState(false);
   const [columns, setColumns] = useState([]);
 
   const [update, setUpdate] = useState(true);
+  let { id } = useParams();
 
-  console.log(currBoardID);
   useEffect(() => {
-    axios.get(`/api/boards/${currBoardID}`).then((response) => {
+    axios.get(`/api/boards/${id}`).then((response) => {
       const currentBoard = response.data[0];
       if (currentBoard.length === 0) {
         console.log(currentBoard.board.columns);
@@ -73,6 +73,7 @@ const Board = () => {
       }
     });
 
+    setCurrBoardID(id);
     // empty array dependency, so this runs only on mount
   }, []);
 
@@ -156,6 +157,9 @@ const Board = () => {
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div className='column-container'>
+        <div>
+          <input type='text' />
+        </div>
         <div className='modal-box'>
           {showColumnModal && (
             <ColumnModal
