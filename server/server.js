@@ -23,6 +23,7 @@ app.use(cookieParser());
 app.use(cors());
 
 // handle requests for static files (bundle.js)
+
 app.use('/build', express.static(path.resolve(__dirname, '../build')));
 
 // const currSession = {
@@ -53,6 +54,14 @@ app.use('/api/users', UserRouter);
 app.use('/api/boards', BoardRouter);
 app.use('/api/columns', ColumnRouter);
 app.use('/api/cards', CardRouter);
+
+app.get('/*', function (req, res) {
+  res.sendFile(path.join(__dirname, '../build/index.html'), function (err) {
+    if (err) {
+      res.status(500).send(err);
+    }
+  });
+});
 
 // server index.html
 app.get('/', (req, res) => {
