@@ -18,7 +18,7 @@ export const ColumnModal = ({
   setColumns,
   setUpdate,
 }) => {
-  const { currBoardID, setCurrBoardId } = useContext(BoardContext);
+  const { currBoardID } = useContext(BoardContext);
 
   const [name, setName] = useState('');
   const handleAdd = () => {
@@ -29,7 +29,7 @@ export const ColumnModal = ({
     };
 
     axios
-      .post('api/columns/new', newColumn)
+      .post('/api/columns/new', newColumn)
       .then((response) => {
         if (response.status !== 200) {
           throw new Error('Error caught when creating new column!!!');
@@ -112,7 +112,7 @@ export const CardModal = ({
     console.log('axios create card');
 
     axios
-      .post('api/cards/create', newCard)
+      .post('/api/cards/create', newCard)
       .then((response) => {
         if (response.status !== 200) {
           throw new Error('Error caught when creating new cards!!!');

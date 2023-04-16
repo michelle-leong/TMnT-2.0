@@ -38,7 +38,7 @@ import axios from 'axios';
  * } param0
  * @returns
  */
-export default function Column({ columns, column, setColumns, key }) {
+const Column = ({ columns, column, setColumns, key }) => {
   const { column_id, column_name, cards } = column;
 
   const [showCardModal, setShowCardModal] = useState(false);
@@ -133,4 +133,6 @@ export default function Column({ columns, column, setColumns, key }) {
       )}
     </Droppable>
   );
-}
+};
+
+export default Column;

@@ -79,37 +79,36 @@ boardController.joinUsernBoard = async (req, res, next) => {
 boardController.getBoard = async (req, res, next) => {
   try {
     const id = req.params.id;
+
     const queryString = `SELECT jsonb_build_object(
       'board_id', b._id,
       'board_name', b.name,
       'columns', COALESCE(
-          jsonb_agg(
-              jsonb_build_object(
-                  'column_id', c._id,
-                  'column_name', c.name,
-                  'cards', COALESCE(
-                      (
-                          SELECT jsonb_agg(
-                              jsonb_build_object(
-                                  'card_id', cd._id,
-                                  'card_task', cd.task
-                              )
-                          )
-                          FROM cards cd
-                          WHERE cd.column_id = c._id
-                      ),
-                      '[]'::jsonb
+      jsonb_agg(
+          jsonb_build_object(
+              'column_id', c._id,
+              'column_name', c.name,
+              'cards', COALESCE(
+                (
+                  SELECT jsonb_agg(
+                      jsonb_build_object(
+                          'card_id', cd._id,
+                          'card_task', cd.task
+                      )
                   )
-              )
-          ),
-          '[]'::jsonb
-      )
+                  FROM cards cd
+                  WHERE cd.column_id = c._id
+              ), 
+              '[]'::jsonb
+            )
+          )
+        ), '[]'::jsonb
+    ) 
   ) AS board
   FROM boards b
   INNER JOIN columns c ON c.board_id = b._id
   WHERE b._id = ${id}
-  GROUP BY b._id;
-  `;
+  GROUP BY b._id;`;
     const response = await pool.query(queryString);
     res.locals.board = response.rows;
     console.log(response.rows);

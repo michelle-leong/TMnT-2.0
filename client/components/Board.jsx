@@ -64,11 +64,12 @@ const Board = () => {
   console.log(currBoardID);
   useEffect(() => {
     axios.get(`/api/boards/${currBoardID}`).then((response) => {
-      const currentBoard = response.data;
+      const currentBoard = response.data[0];
       if (currentBoard.length === 0) {
+        console.log(currentBoard.board.columns);
         setColumns([]);
       } else {
-        setColumns(currentBoard.columns);
+        setColumns(currentBoard.board.columns);
       }
     });
 
