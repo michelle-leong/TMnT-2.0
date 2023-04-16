@@ -28,6 +28,7 @@ module.exports = {
   },
   plugins: [new HTMLWebpackPlugin({ template: './index.html' })],
   devServer: {
+    historyApiFallback: true,
     static: {
       directory: path.resolve(__dirname, 'build'),
       publicPath: '/',

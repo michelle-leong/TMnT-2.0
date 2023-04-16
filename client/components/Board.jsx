@@ -54,32 +54,26 @@ import BoardContext from '../context/BoardContext.jsx';
  * @param {props = {board : array[0].board = board object}} param0
  * @returns
  */
-function Board() {
-  const { currBoardID, setCurrBoardID } = useContext(BoardContext);
+const Board = () => {
+  const { currBoardID } = useContext(BoardContext);
   const [showColumnModal, setShowColumnModal] = useState(false);
   const [columns, setColumns] = useState([]);
 
   const [update, setUpdate] = useState(true);
 
+  console.log(currBoardID);
   useEffect(() => {
-    axios
-      .get(`api/boards/${currBoardID}`)
-      .then((response) => {
-        if (response.status === 200) {
-          const currentBoard = response.data[0].board;
-          // update columns array with get data
-          console.log('columns', currentBoard.columns);
-
-          setColumns(currentBoard.columns);
-          // setCurrBoardID(currBoardID);
-        }
-      })
-      .catch((error) => {
-        console.error('An error occured in fetching currBoard');
-      });
+    axios.get(`/api/boards/${currBoardID}`).then((response) => {
+      const currentBoard = response.data;
+      if (currentBoard.length === 0) {
+        setColumns([]);
+      } else {
+        setColumns(currentBoard.columns);
+      }
+    });
 
     // empty array dependency, so this runs only on mount
-  }, [currBoardID]);
+  }, []);
 
   // const handleDelete = () => {
   //   console.log('axios deleted Board');
@@ -181,7 +175,7 @@ function Board() {
       </div>
     </DragDropContext>
   );
-}
+};
 
 export default Board;
 

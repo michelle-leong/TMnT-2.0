@@ -7,6 +7,8 @@ import LoginPage from './pages/LoginPage.jsx';
 import SignUpPage from './pages/SignUpPage.jsx';
 import HomePage from './pages/HomePage.jsx';
 import UserContext from './context/UserContext.jsx';
+import BoardPage from './pages/BoardPage.jsx';
+import BoardContext from './context/BoardContext.jsx';
 
 //user: testing
 //password: testing1
@@ -18,16 +20,20 @@ const App = () => {
     first_name: 'test',
     last_name: 'test',
   });
-  console.log(user);
+  const [currBoardID, setCurrBoardID] = useState(null);
+  // console.log(user);
   return (
     <UserContext.Provider value={{ user, setUser }}>
-      <Router>
-        <Routes>
-          {/* <Route path='/' element={<LoginPage />} />
+      <BoardContext.Provider value={{ currBoardID, setCurrBoardID }}>
+        <Router>
+          <Routes>
+            {/* <Route path='/' element={<LoginPage />} />
           <Route path='/signup' element={<SignUpPage />} /> */}
-          <Route path='/' element={<HomePage />} />
-        </Routes>
-      </Router>
+            <Route path='/' element={<HomePage />} />
+            <Route path='/boards/:id' element={<BoardPage />} />
+          </Routes>
+        </Router>
+      </BoardContext.Provider>
     </UserContext.Provider>
   );
 };

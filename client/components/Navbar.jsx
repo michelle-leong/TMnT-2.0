@@ -56,15 +56,7 @@ const Navbar = ({ isDarkMode, setIsDarkMode }) => {
     <nav className={`navbar`}>
       <ul className='navbar-nav'>
         <DropdownMenu boardList={boardList} />
-        <input
-          type='text'
-          className='board-name-input'
-          value={inputValue}
-          onChange={handleInputChange}
-        />
-        <button className='board-name-save-button' onClick={handleSaveClick}>
-          Save
-        </button>
+        {/* <li> </li> */}
       </ul>
     </nav>
   );
