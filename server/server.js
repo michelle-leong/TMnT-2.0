@@ -55,13 +55,13 @@ app.use('/api/boards', BoardRouter);
 app.use('/api/columns', ColumnRouter);
 app.use('/api/cards', CardRouter);
 
-app.get('/*', function (req, res) {
-  res.sendFile(path.join(__dirname, '../build/index.html'), function (err) {
-    if (err) {
-      res.status(500).send(err);
-    }
-  });
-});
+// app.get('/*', function (req, res) {
+//   res.sendFile(path.join(__dirname, '../build/index.html'), function (err) {
+//     if (err) {
+//       res.status(500).send(err);
+//     }
+//   });
+// });
 
 // server index.html
 app.get('/', (req, res) => {

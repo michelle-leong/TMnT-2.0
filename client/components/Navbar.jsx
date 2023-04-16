@@ -4,6 +4,7 @@ import UserContext from '../context/UserContext.jsx';
 import BoardContext from '../context/BoardContext.jsx';
 import DropdownItem from './navbar/DropdownItem.jsx';
 import DropdownMenu from './navbar/DropdownMenu.jsx';
+import { useNavigate } from 'react-router-dom';
 
 const Navbar = ({ isDarkMode, setIsDarkMode }) => {
   const { user } = useContext(UserContext);
@@ -12,6 +13,7 @@ const Navbar = ({ isDarkMode, setIsDarkMode }) => {
   const [currBoardName, setCurrBoardName] = useState('');
   const [inputValue, setInputValue] = useState(currBoardName);
 
+  const navigate = useNavigate();
   // fetch call to grab all boards for the user
   // useEffect(() => {
   //   axios
@@ -55,8 +57,10 @@ const Navbar = ({ isDarkMode, setIsDarkMode }) => {
   return (
     <nav className={`navbar`}>
       <ul className='navbar-nav'>
+        <li>
+          <button onClick={() => navigate('/')}>Home</button>
+        </li>
         <DropdownMenu boardList={boardList} />
-        {/* <li> </li> */}
       </ul>
     </nav>
   );
