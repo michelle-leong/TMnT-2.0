@@ -52,7 +52,6 @@ export default function Card({ card, setCards, dropIndex }) {
             {showUpdateCardModal && (
               <UpdateCardModal
                 card_id={card_id}
-                showUpdateCardModal={showUpdateCardModal}
                 setShowUpdateCardModal={setShowUpdateCardModal}
                 setCards={setCards}
                 columnId={column_id}

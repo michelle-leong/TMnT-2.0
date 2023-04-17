@@ -154,7 +154,6 @@ export const CardModal = ({
 };
 
 export const UpdateCardModal = ({
-  showUpdateCardModal,
   setShowUpdateCardModal,
   setCards,
   card_id,
@@ -207,11 +206,11 @@ export const UpdateCardModal = ({
       .catch((err) => {
         console.error('Error caught when updating new card ' + err);
       });
-    setShowUpdateCardModal(!showUpdateCardModal);
+    setShowUpdateCardModal(false);
   };
 
   const handleCancel = () => {
-    setShowUpdateCardModal(!showUpdateCardModal);
+    setShowUpdateCardModal(false);
   };
 
   return (

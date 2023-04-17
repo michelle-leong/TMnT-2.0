@@ -61,6 +61,7 @@ const Board = () => {
 
   let { id } = useParams();
 
+  //adding a new card and moving cards between columns doesn't work because the card array in the board is old, can't identify the cards unless we refetch the data
   useEffect(() => {
     axios.get(`/api/boards/${id}`).then((response) => {
       const currentBoard = response.data[0];
