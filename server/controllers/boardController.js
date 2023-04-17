@@ -111,7 +111,6 @@ boardController.getBoard = async (req, res, next) => {
   GROUP BY b._id;`;
     const response = await pool.query(queryString);
     res.locals.board = response.rows;
-    console.log(response.rows);
     return next();
   } catch (err) {
     return next({

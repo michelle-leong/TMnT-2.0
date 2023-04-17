@@ -38,16 +38,17 @@ import axios from 'axios';
  * } param0
  * @returns
  */
-const Column = ({ columns, column, setColumns, key }) => {
+const Column = ({ column, setColumns }) => {
   const { column_id, column_name, cards } = column;
 
   const [showCardModal, setShowCardModal] = useState(false);
-  const [cardArray, setCards] = useState([]); // ideally a doubly linked list for super fast insertion
+  const [cardArray, setCards] = useState([]);
+  const [counter, setCounter] = useState(1);
 
   useEffect(() => {
     if (!Array.isArray(cards)) setCards([]);
     else setCards(cards);
-  }, []);
+  }, [counter]);
 
   const handleDelete = () => {
     console.log('axios deleted Column', column_id);
@@ -76,6 +77,7 @@ const Column = ({ columns, column, setColumns, key }) => {
     setShowCardModal(!showCardModal);
   };
 
+  console.log(cardArray);
   /**
    * useEffect after the a column is created updated deleted
    *  async call to fetch all card data associated with column
@@ -113,6 +115,7 @@ const Column = ({ columns, column, setColumns, key }) => {
                 setShowCardModal={setShowCardModal}
                 setCards={setCards}
                 columnId={column_id}
+                setCounter={setCounter}
               />
             )}
           </div>

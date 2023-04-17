@@ -9,8 +9,6 @@ export default function Card({ card, setCards, dropIndex }) {
   const [showUpdateCardModal, setShowUpdateCardModal] = useState(false);
 
   const handleDelete = () => {
-    console.log('axios deleted card');
-
     axios
       .delete(`/api/cards/delete`, {
         data: { id: card_id },
@@ -23,6 +21,7 @@ export default function Card({ card, setCards, dropIndex }) {
               (cardObj) => cardObj.card_id === card_id
             );
             newState.splice(index, 1);
+            console.log(newState);
             return newState;
           });
         }
@@ -31,8 +30,6 @@ export default function Card({ card, setCards, dropIndex }) {
 
   // open up update card modal form
   const toggle = () => {
-    console.log('toggled update Card Modal');
-    console.log('id', card_id);
     setShowUpdateCardModal(!showUpdateCardModal);
   };
   /**

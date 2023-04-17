@@ -3,8 +3,6 @@ import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import BoardContext from '../context/BoardContext.jsx';
 
-import Column from './Column.jsx';
-
 // Modal for the columns
 /**
  * showColumnModeal : Boolean
@@ -12,17 +10,11 @@ import Column from './Column.jsx';
  * board_id : Number
  */
 
-export const ColumnModal = ({
-  showColumnModal,
-  setShowColumnModal,
-  setColumns,
-  setUpdate,
-}) => {
+export const ColumnModal = ({ setShowColumnModal, setColumns }) => {
   const { currBoardID } = useContext(BoardContext);
 
   const [name, setName] = useState('');
   const handleAdd = () => {
-    console.log('board_id', currBoardID);
     const newColumn = {
       name: name,
       board_id: currBoardID,
@@ -41,19 +33,20 @@ export const ColumnModal = ({
             column_id: response.data._id,
             column_name: response.data.name,
             board_id: response.data.board_id,
+            cards: [],
           });
+          console.log(newState);
           return newState;
         });
       })
       .catch((err) => {
         console.error('Error caught when creating new column ' + err);
       });
-
-    setShowColumnModal(!showColumnModal);
+    setShowColumnModal(false);
   };
 
   const handleCancel = () => {
-    setShowColumnModal(!showColumnModal);
+    setShowColumnModal(false);
   };
 
   return (
@@ -67,7 +60,6 @@ export const ColumnModal = ({
           value={name}
           onChange={(e) => {
             setName(e.target.value);
-            return console.log('name', name);
           }}
           placeholder='column name'
         />
@@ -77,10 +69,9 @@ export const ColumnModal = ({
           ADD
         </button>
         <button className='modal-text-button' onClick={handleCancel}>
-          DELETE
+          CANCEL
         </button>
       </div>
-      {/* {showCardModal && <CardModal />} */}
     </div>
   );
 };
@@ -95,6 +86,7 @@ export const CardModal = ({
   setShowCardModal,
   setCards,
   columnId,
+  setCounter,
 }) => {
   const [task, setTask] = useState('');
 
@@ -109,8 +101,6 @@ export const CardModal = ({
       columnId,
     };
 
-    console.log('axios create card');
-
     axios
       .post('/api/cards/create', newCard)
       .then((response) => {
@@ -122,7 +112,6 @@ export const CardModal = ({
           newState.push({
             card_id: response.data._id,
             card_task: response.data.task,
-            column_id: response.data.column_id,
           });
           return newState;
         });
@@ -130,7 +119,7 @@ export const CardModal = ({
       .catch((err) => {
         console.error('Error caught when creating new card ' + err);
       });
-
+    setCounter((prev) => ++prev);
     setShowCardModal(!showCardModal);
   };
 

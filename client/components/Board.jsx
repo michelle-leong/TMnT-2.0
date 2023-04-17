@@ -55,24 +55,22 @@ import BoardContext from '../context/BoardContext.jsx';
  * @returns
  */
 const Board = () => {
-  const { currBoardID, setCurrBoardID } = useContext(BoardContext);
+  const { setCurrBoardID } = useContext(BoardContext);
   const [showColumnModal, setShowColumnModal] = useState(false);
   const [columns, setColumns] = useState([]);
 
-  const [update, setUpdate] = useState(true);
   let { id } = useParams();
 
   useEffect(() => {
     axios.get(`/api/boards/${id}`).then((response) => {
       const currentBoard = response.data[0];
+      console.log(currentBoard.board.columns);
       if (currentBoard.length === 0) {
-        console.log(currentBoard.board.columns);
         setColumns([]);
       } else {
         setColumns(currentBoard.board.columns);
       }
     });
-
     setCurrBoardID(id);
     // empty array dependency, so this runs only on mount
   }, []);
@@ -92,7 +90,6 @@ const Board = () => {
       key={columnObj.column_id}
       column={columnObj}
       setColumns={setColumns}
-      columns={columns}
     />
   ));
 
@@ -136,21 +133,10 @@ const Board = () => {
     });
 
     let columnId = landing.column_id;
-    axios
-      .patch(`/api/cards/moveCard`, {
-        id: cardCopy.card_id,
-        columnId: columnId,
-      })
-      .then((response) => {
-        if (response !== 200) {
-          throw new Error('Error caught when updating card!!!');
-        } else {
-          console.log(response);
-        }
-      })
-      .catch((err) => {
-        console.error('Error caught when updating card');
-      });
+    axios.patch(`/api/cards/moveCard`, {
+      id: cardCopy.card_id,
+      columnId: columnId,
+    });
   };
 
   // TODO board DELETE button
@@ -159,15 +145,14 @@ const Board = () => {
       <div className='column-container'>
         <div>
           <input type='text' />
+          <button>Save</button>
+          <button>Delete</button>
         </div>
         <div className='modal-box'>
           {showColumnModal && (
             <ColumnModal
-              showColumnModal={showColumnModal}
               setShowColumnModal={setShowColumnModal}
               setColumns={setColumns}
-              setUpdate={setUpdate}
-              currBoardID={currBoardID}
             />
           )}
         </div>
