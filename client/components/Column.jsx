@@ -38,21 +38,18 @@ import axios from 'axios';
  * } param0
  * @returns
  */
-const Column = ({ column, setColumns }) => {
+const Column = ({ column, setColumns, setCounter }) => {
   const { column_id, column_name, cards } = column;
 
   const [showCardModal, setShowCardModal] = useState(false);
   const [cardArray, setCards] = useState([]);
-  const [counter, setCounter] = useState(1);
 
   useEffect(() => {
     if (!Array.isArray(cards)) setCards([]);
     else setCards(cards);
-  }, [counter]);
+  }, []);
 
   const handleDelete = () => {
-    console.log('axios deleted Column', column_id);
-    // console.log('key', key);
     axios
       .delete(`/api/columns/delete`, {
         data: { id: column_id },
@@ -69,6 +66,7 @@ const Column = ({ column, setColumns }) => {
           });
         }
       });
+    setCounter((prev) => ++prev);
   };
   // console.log('cards', cards);
   // open up add card modal form
@@ -77,7 +75,6 @@ const Column = ({ column, setColumns }) => {
     setShowCardModal(!showCardModal);
   };
 
-  console.log(cardArray);
   /**
    * useEffect after the a column is created updated deleted
    *  async call to fetch all card data associated with column
@@ -93,6 +90,7 @@ const Column = ({ column, setColumns }) => {
       card={cardObj}
       setCards={setCards}
       toggle={toggle}
+      setCounter={setCounter}
     />
   ));
   // console.log(renderCards)
@@ -101,7 +99,7 @@ const Column = ({ column, setColumns }) => {
    * to the board title, so they can be changed and updated
    */
   return (
-    <Droppable droppableId={column_id.toString()}>
+    <Droppable key={column_id.toString()} droppableId={column_id.toString()}>
       {(provided) => (
         <div
           className='columnCont'

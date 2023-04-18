@@ -73,7 +73,7 @@ cardController.moveCard = async (req, res, next) => {
     return next();
   } catch (err) {
     return next({
-      log: 'error in cardController.deleteCard',
+      log: 'error in cardController.deleteCard' + err,
       message: { err: 'ERROR in cardController.deleteCard' + err },
     });
   }

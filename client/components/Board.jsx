@@ -58,6 +58,7 @@ const Board = () => {
   const { setCurrBoardID } = useContext(BoardContext);
   const [showColumnModal, setShowColumnModal] = useState(false);
   const [columns, setColumns] = useState([]);
+  const [counter, setCounter] = useState(1);
 
   let { id } = useParams();
 
@@ -73,8 +74,7 @@ const Board = () => {
       }
     });
     setCurrBoardID(id);
-    // empty array dependency, so this runs only on mount
-  }, []);
+  }, [counter]);
 
   // const handleDelete = () => {
   //   console.log('axios deleted Board');
@@ -91,8 +91,11 @@ const Board = () => {
       key={columnObj.column_id}
       column={columnObj}
       setColumns={setColumns}
+      setCounter={setCounter}
     />
   ));
+
+  // console.log(columns);
 
   const onDragEnd = (result) => {
     const { source, destination } = result;
@@ -123,21 +126,26 @@ const Board = () => {
     //create a copy of the card
     setColumns((prevState) => {
       //copy previous state
-      prevState = [...prevState];
+      const copyState = [...prevState];
 
       //remove card from old column
-      prevState[beginningIndex].cards.splice(source.index, 1);
+      copyState[beginningIndex].cards.splice(source.index, 1);
 
       //add card to new column
-      prevState[landingIndex].cards.splice(destination.index, 0, cardCopy);
-      return prevState;
+      copyState[landingIndex].cards.splice(destination.index, 0, cardCopy);
+      return copyState;
     });
 
     let columnId = landing.column_id;
-    axios.patch(`/api/cards/moveCard`, {
-      id: cardCopy.card_id,
-      columnId: columnId,
-    });
+    console.log(columnId);
+    axios
+      .patch(`/api/cards/moveCard`, {
+        id: cardCopy.card_id,
+        columnId: columnId,
+      })
+      .then(() => {
+        setCounter((prev) => ++prev);
+      });
   };
 
   // TODO board DELETE button
@@ -154,6 +162,7 @@ const Board = () => {
             <ColumnModal
               setShowColumnModal={setShowColumnModal}
               setColumns={setColumns}
+              setCounter={setCounter}
             />
           )}
         </div>

@@ -10,7 +10,7 @@ import BoardContext from '../context/BoardContext.jsx';
  * board_id : Number
  */
 
-export const ColumnModal = ({ setShowColumnModal, setColumns }) => {
+export const ColumnModal = ({ setShowColumnModal, setColumns, setCounter }) => {
   const { currBoardID } = useContext(BoardContext);
 
   const [name, setName] = useState('');
@@ -43,6 +43,7 @@ export const ColumnModal = ({ setShowColumnModal, setColumns }) => {
         console.error('Error caught when creating new column ' + err);
       });
     setShowColumnModal(false);
+    setCounter((prev) => ++prev);
   };
 
   const handleCancel = () => {
@@ -170,11 +171,6 @@ export const UpdateCardModal = ({
       task,
       card_id,
     };
-
-    console.log(`
-  newCard.task: ${updateCard.task}\n
-  newCard.card_id: ${updateCard.card_id}
-  `);
 
     axios
       .patch('api/cards/update', updateCard)

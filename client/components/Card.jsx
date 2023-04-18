@@ -3,7 +3,7 @@ import { Draggable } from 'react-beautiful-dnd';
 import { UpdateCardModal } from './Modals.jsx';
 import axios from 'axios';
 
-export default function Card({ card, setCards, dropIndex }) {
+export default function Card({ card, setCards, dropIndex, setCounter }) {
   const { card_id, card_task, column_id } = card;
 
   const [showUpdateCardModal, setShowUpdateCardModal] = useState(false);
@@ -26,6 +26,7 @@ export default function Card({ card, setCards, dropIndex }) {
           });
         }
       });
+    setCounter((prev) => ++prev);
   };
 
   // open up update card modal form
@@ -55,6 +56,7 @@ export default function Card({ card, setCards, dropIndex }) {
                 setShowUpdateCardModal={setShowUpdateCardModal}
                 setCards={setCards}
                 columnId={column_id}
+                setCounter={setCounter}
               />
             )}
           </div>
