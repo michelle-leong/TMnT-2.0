@@ -10,6 +10,7 @@ const cardController = {};
 cardController.createCard = async (req, res, next) => {
   try {
     const { task, columnId } = req.body;
+    console.log('CREATECARD, REQ.BODY:', req.body);
     const queryString = `INSERT INTO cards (task, column_id) 
     VALUES ('${task}', ${columnId}) RETURNING *`;
     const cardCreated = await pool.query(queryString);
@@ -64,17 +65,19 @@ cardController.moveCard = async (req, res, next) => {
   try {
     const cardId = req.body.id;
     const newColumnId = req.body.columnId;
+    console.log('Move Card: REQ.BODY:', req.body);
     // query to delete card per id
     const queryString = `UPDATE cards
     SET column_id = ${newColumnId}
     WHERE _id = ${cardId} RETURNING *`;
     const movedCard = await pool.query(queryString);
+
     res.locals.movedCard = movedCard.rows[0];
     return next();
   } catch (err) {
     return next({
-      log: 'error in cardController.deleteCard' + err,
-      message: { err: 'ERROR in cardController.deleteCard' + err },
+      log: 'error in cardController.moveCard' + err,
+      message: { err: 'ERROR in cardController.moveCard' + err },
     });
   }
 };

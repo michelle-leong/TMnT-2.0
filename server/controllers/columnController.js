@@ -3,7 +3,7 @@ const pool = require('../models/userModel');
 const columnController = {};
 
 columnController.addColumn = async (req, res, next) => {
-  console.log('req body', req.body)
+  console.log('req body', req.body);
   try {
     const boardId = req.body.board_id;
     const columnName = req.body.name;
@@ -35,7 +35,7 @@ columnController.updateColumn = async (req, res, next) => {
   }
 };
 columnController.deleteColumn = async (req, res, next) => {
-  console.log ('req body', req.body);
+  console.log('req body', req.body);
   try {
     const columnId = req.body.id;
     const queryString = `DELETE FROM columns where _id = ${columnId}`;
@@ -44,7 +44,7 @@ columnController.deleteColumn = async (req, res, next) => {
     return next();
   } catch (err) {
     return next({
-      log: 'columnController.deleteColumn',
+      log: 'columnController.deleteColumn' + err,
       message: { err: 'ERROR in columnController.deleteColumn' },
     });
   }

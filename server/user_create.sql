@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS public.users_boards (
 -- to add the foreign keys at the end of the table creation
 -- add foreign key to users_itineraries called "users_itineraries_fk"
 -- ALTER TABLE public.boards ADD CONSTRAINT "users_itineraries_fk0" FOREIGN KEY ("user_id") REFERENCES  public.users("_id");
-ALTER TABLE public.users_boards ADD CONSTRAINT "user_boards_fk0" FOREIGN KEY ("user_id") REFERENCES public.users("_id");
-ALTER TABLE public.users_boards ADD CONSTRAINT "user_boards_fk1" FOREIGN KEY ("board_id") REFERENCES public.boards("_id");
-ALTER TABLE public.columns ADD CONSTRAINT "columns_boards_fk0" FOREIGN KEY ("board_id") REFERENCES public.boards("_id");
-ALTER TABLE public.cards ADD CONSTRAINT "cards_fk0" FOREIGN KEY ("column_id") REFERENCES public.columns("_id");
+ALTER TABLE public.users_boards ADD CONSTRAINT "user_boards_fk0" FOREIGN KEY ("user_id") REFERENCES public.users("_id") ON DELETE CASCADE;
+ALTER TABLE public.users_boards ADD CONSTRAINT "user_boards_fk1" FOREIGN KEY ("board_id") REFERENCES public.boards("_id") ON DELETE CASCADE;
+ALTER TABLE public.columns ADD CONSTRAINT "columns_boards_fk0" FOREIGN KEY ("board_id") REFERENCES public.boards("_id") ON DELETE CASCADE;
+ALTER TABLE public.cards ADD CONSTRAINT "cards_fk0" FOREIGN KEY ("column_id") REFERENCES public.columns("_id") ON DELETE CASCADE;

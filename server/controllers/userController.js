@@ -112,7 +112,6 @@ userController.getBoards = async (req, res, next) => {
     WHERE user_id = ${userId}`;
     const boards = await pool.query(queryString);
     res.locals.allBoards = boards.rows;
-    console.log(boards.rows);
     return next();
   } catch (err) {
     return next({

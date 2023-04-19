@@ -7,7 +7,7 @@ const BoardRouter = require('./routes/BoardRouter');
 const ColumnRouter = require('./routes/ColumnRouter');
 const CardRouter = require('./routes/CardRouter');
 const sessions = require('express-session');
-
+const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 
 // setup app and port
@@ -15,6 +15,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // handle parsing request body
+app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
