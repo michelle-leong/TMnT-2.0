@@ -48,12 +48,13 @@ boardController.updateBoard = async (req, res, next) => {
 boardController.deleteBoard = async (req, res, next) => {
   try {
     const boardId = req.body.id; //or req.params.board
+    console.log(req.body);
     await pool.query(`DELETE FROM boards WHERE _id = ${boardId}`);
     console.log(`table id ${boardId} deleted`);
     return next();
   } catch (err) {
     return next({
-      log: 'error in boardController.deleteBoard',
+      log: 'error in boardController.deleteBoard ' + err,
       message: { err: 'ERROR in boardController.deleteBoard' + err },
     });
   }
