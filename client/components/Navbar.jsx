@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import UserContext from '../context/UserContext.jsx';
-import BoardContext from '../context/BoardContext.jsx';
+
 import DropdownItem from './navbar/DropdownItem.jsx';
 import DropdownMenu from './navbar/DropdownMenu.jsx';
 import { useNavigate } from 'react-router-dom';
@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 const Navbar = ({ isDarkMode, setIsDarkMode }) => {
   const { user } = useContext(UserContext);
   const [boardList, setBoardList] = useState([]);
-  const { currBoardID, setCurrBoardID } = useContext(BoardContext);
+
   const [currBoardName, setCurrBoardName] = useState('');
   const [inputValue, setInputValue] = useState(currBoardName);
 
@@ -30,27 +30,6 @@ const Navbar = ({ isDarkMode, setIsDarkMode }) => {
   // }, [currBoardID]);
 
   // the boards mapped from the server
-
-  const handleInputChange = (e) => {
-    setInputValue(e.target.value);
-  };
-
-  const handleSaveClick = () => {
-    const boardToUpdate = boardList.find((board) => board._id === currBoardID);
-    axios
-      .patch(`/api/boards/update`, { id: boardToUpdate._id, name: inputValue })
-      .then(() => {
-        setCurrBoardName(inputValue);
-        const updatedBoardList = boardList.map((board) => {
-          if (board._id === currBoardID) {
-            return { ...board, name: inputValue };
-          }
-          return board;
-        });
-        setBoardList(updatedBoardList);
-      })
-      .catch((error) => console.error(error));
-  };
 
   // show board 1 in currBoardId
 

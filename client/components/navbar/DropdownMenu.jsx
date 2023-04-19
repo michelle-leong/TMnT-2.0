@@ -1,5 +1,4 @@
 import React, { useState, useContext } from 'react';
-import BoardContext from '../../context/BoardContext.jsx';
 import UserContext from '../../context/UserContext.jsx';
 import axios from 'axios';
 
@@ -8,7 +7,6 @@ import DropdownItem from './DropdownItem.jsx';
 function DropdownMenu({ boardList }) {
   const [open, setOpen] = useState(false);
   const { user } = useContext(UserContext);
-  const { currBoardID, setCurrBoardID } = useContext(BoardContext);
 
   const handleCreateBoard = () => {
     axios
@@ -23,7 +21,6 @@ function DropdownMenu({ boardList }) {
         const newBoard = response.data;
 
         // Set the latest created board as the current board
-        setCurrBoardID(newBoard._id);
       })
       .catch((error) => {
         // handle errors here
@@ -34,11 +31,7 @@ function DropdownMenu({ boardList }) {
   let boardOptions;
   if (Array.isArray(boardList)) {
     boardOptions = boardList.map((board) => (
-      <DropdownItem
-        boardID={board._id}
-        boardName={board.name}
-        close={() => setOpen(false)}
-      />
+      <DropdownItem boardName={board.name} close={() => setOpen(false)} />
     ));
   } else {
     boardOptions = [];

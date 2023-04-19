@@ -1,7 +1,5 @@
-import React, { Component } from 'react';
-import { useState, useEffect, useContext } from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
-import BoardContext from '../context/BoardContext.jsx';
 
 // Modal for the columns
 /**
@@ -10,14 +8,12 @@ import BoardContext from '../context/BoardContext.jsx';
  * board_id : Number
  */
 
-export const ColumnModal = ({ setShowColumnModal, setColumns, setCounter }) => {
-  const { currBoardID } = useContext(BoardContext);
-
+export const ColumnModal = ({ setShowColumnModal, setColumns, boardId }) => {
   const [name, setName] = useState('');
   const handleAdd = () => {
     const newColumn = {
       name: name,
-      board_id: currBoardID,
+      board_id: boardId,
     };
 
     axios
@@ -32,10 +28,8 @@ export const ColumnModal = ({ setShowColumnModal, setColumns, setCounter }) => {
           newState.push({
             column_id: response.data._id,
             column_name: response.data.name,
-            board_id: response.data.board_id,
             cards: [],
           });
-          console.log(newState);
           return newState;
         });
       })
@@ -43,7 +37,6 @@ export const ColumnModal = ({ setShowColumnModal, setColumns, setCounter }) => {
         console.error('Error caught when creating new column ' + err);
       });
     setShowColumnModal(false);
-    setCounter((prev) => ++prev);
   };
 
   const handleCancel = () => {
@@ -85,9 +78,8 @@ export const ColumnModal = ({ setShowColumnModal, setColumns, setCounter }) => {
 export const CardModal = ({
   showCardModal,
   setShowCardModal,
-  setCards,
   columnId,
-  setCounter,
+  setColumns,
 }) => {
   const [task, setTask] = useState('');
 
@@ -108,19 +100,23 @@ export const CardModal = ({
         if (response.status !== 200) {
           throw new Error('Error caught when creating new cards!!!');
         }
-        setCards((cardsState) => {
-          const newState = cardsState.map((obj) => ({ ...obj }));
-          newState.push({
+        setColumns((prevState) => {
+          const stateCopy = prevState.slice();
+          const columnIndex = stateCopy.findIndex(
+            (column) => column.column_id === columnId
+          );
+          const column = stateCopy[columnIndex];
+          column.cards.push({
             card_id: response.data._id,
             card_task: response.data.task,
           });
-          return newState;
+          return stateCopy;
         });
       })
       .catch((err) => {
         console.error('Error caught when creating new card ' + err);
       });
-    setCounter((prev) => ++prev);
+
     setShowCardModal(!showCardModal);
   };
 
@@ -155,11 +151,13 @@ export const CardModal = ({
 };
 
 export const UpdateCardModal = ({
-  setShowUpdateCardModal,
-  setCards,
   card_id,
+  setShowUpdateCardModal,
+  columnId,
+  setColumns,
+  cardTask,
 }) => {
-  const [task, setTask] = useState('');
+  const [task, setTask] = useState(cardTask);
 
   /**
    * TODO error checking for empty strings
@@ -171,7 +169,10 @@ export const UpdateCardModal = ({
       task,
       card_id,
     };
-
+    if (task === '') {
+      setShowUpdateCardModal(false);
+      return;
+    }
     axios
       .patch('api/cards/update', updateCard)
       .then((response) => {
@@ -179,24 +180,22 @@ export const UpdateCardModal = ({
           throw new Error('Error caught when updating new cards!!!');
         }
 
-        setCards((cardsState) => {
-          let newState = [...cardsState];
-          const index = cardsState.findIndex(
-            (cardObj) => cardObj.card_id === card_id
+        setColumns((prevState) => {
+          const stateCopy = prevState.slice();
+          const columnIndex = stateCopy.findIndex(
+            (column) => column.column_id === columnId
           );
-          console.log('index', index, 'res data', response.data);
-          const updatedCard = [
-            {
-              card_id: response.data._id,
-              card_task: response.data.task,
-              column_id: response.data.column_id,
-            },
-          ];
-          newState = newState
-            .slice(0, index)
-            .concat(updatedCard)
-            .concat(newState.slice(index + 1, newState.length));
-          return newState;
+          const column = stateCopy[columnIndex];
+          const cardIndex = column.cards.findIndex(
+            (card) => card.card_id === card_id
+          );
+          const updatedCard = {
+            card_id: response.data._id,
+            card_task: response.data.task,
+          };
+          column.cards.splice(cardIndex, 1);
+          column.cards.splice(cardIndex, 0, updatedCard);
+          return stateCopy;
         });
       })
       .catch((err) => {
@@ -218,9 +217,7 @@ export const UpdateCardModal = ({
           type='text'
           value={task}
           onChange={(e) => setTask(e.target.value)}
-          // required
-          placeholder='add a task'
-          // do we want an onChange here or wait until the input is finished
+          placeholder='update a task'
         />
       </form>
       <div className='modal-button-cont'>

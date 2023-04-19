@@ -38,7 +38,7 @@ import axios from 'axios';
  * } param0
  * @returns
  */
-const Column = ({ column, setColumns, setCounter }) => {
+const Column = ({ column, setColumns }) => {
   const { column_id, column_name, cards } = column;
 
   const [showCardModal, setShowCardModal] = useState(false);
@@ -66,34 +66,19 @@ const Column = ({ column, setColumns, setCounter }) => {
           });
         }
       });
-    setCounter((prev) => ++prev);
-  };
-  // console.log('cards', cards);
-  // open up add card modal form
-  const toggle = () => {
-    console.log('toggled Add Card Modal');
-    setShowCardModal(!showCardModal);
   };
 
-  /**
-   * useEffect after the a column is created updated deleted
-   *  async call to fetch all card data associated with column
-   * to re render the columns
-   */
-
-  // render array of card objects prop drilling card info
-  // console.log(`${column_id}'s cardArray : ${cardArray}`);
   const renderCards = cardArray.map((cardObj, index) => (
     <Card
       dropIndex={index}
       id={cardObj._id}
       card={cardObj}
       setCards={setCards}
-      toggle={toggle}
-      setCounter={setCounter}
+      setColumns={setColumns}
+      columnId={column_id}
     />
   ));
-  // console.log(renderCards)
+
   /**
    * TODO column titles should be an input similar
    * to the board title, so they can be changed and updated
@@ -113,7 +98,7 @@ const Column = ({ column, setColumns, setCounter }) => {
                 setShowCardModal={setShowCardModal}
                 setCards={setCards}
                 columnId={column_id}
-                setCounter={setCounter}
+                setColumns={setColumns}
               />
             )}
           </div>
@@ -123,7 +108,7 @@ const Column = ({ column, setColumns, setCounter }) => {
             {provided.placeholder}
           </div>
           <div className='modal-button-cont'>
-            <button className='btn' onClick={toggle}>
+            <button className='btn' onClick={() => setShowCardModal(true)}>
               Add Card
             </button>
             <button className='btn' onClick={handleDelete}>

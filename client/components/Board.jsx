@@ -1,90 +1,87 @@
-import React, { Component } from 'react';
-import { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { DragDropContext } from 'react-beautiful-dnd';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 // components
 import Column from './Column.jsx';
 import { ColumnModal } from './Modals.jsx';
-import BoardContext from '../context/BoardContext.jsx';
 
-/**
- * [
- *     {
- *         "board": {
- *             "columns": [
- *                 {
- *                     "cards": [
- *                         {
- *                             "card_id": 4,
- *                             "card_task": "its a task"
- *                         }
- *                     ],
- *                     "column_id": 2,
- *                     "column_name": "testing columns"
- *                 },
- *                 {
- *                     "cards": [
- *                         {
- *                             "card_id": 1,
- *                             "card_task": "task updated again and again"
- *                         },
- *                         {
- *                             "card_id": 5,
- *                             "card_task": "its a task"
- *                         },
- *                         {
- *                             "card_id": 6,
- *                             "card_task": "its a task"
- *                         }
- *                     ],
- *                     "column_id": 3,
- *                     "column_name": "another testing column"
- *                 }
- *             ],
- *             "board_id": 2,
- *             "board_name": "test board"
- *         }
- *     }
- * ]
- *
- */
-/**
+// const a = [
+//   {
+//     board: {
+//       columns: [
+//         {
+//           cards: [
+//             {
+//               card_id: 4,
+//               card_task: 'its a task',
+//             },
+//           ],
+//           column_id: 2,
+//           column_name: 'testing columns',
+//         },
+//         {
+//           cards: [
+//             {
+//               card_id: 1,
+//               card_task: 'task updated again and again',
+//             },
+//             {
+//               card_id: 5,
+//               card_task: 'its a task',
+//             },
+//             {
+//               card_id: 6,
+//               card_task: 'its a task',
+//             },
+//           ],
+//           column_id: 3,
+//           column_name: 'another testing column',
+//         },
+//       ],
+//       board_id: 2,
+//       board_name: 'test board',
+//     },
+//   },
+// ];
+
+/*
  *
  * @param {props = {board : array[0].board = board object}} param0
  * @returns
  */
 const Board = () => {
-  const { setCurrBoardID } = useContext(BoardContext);
   const [showColumnModal, setShowColumnModal] = useState(false);
   const [columns, setColumns] = useState([]);
   const [counter, setCounter] = useState(1);
+  const [boardName, setBoardName] = useState('');
 
-  let { id } = useParams();
+  const { id } = useParams();
+  const navigate = useNavigate();
 
-  //adding a new card and moving cards between columns doesn't work because the card array in the board is old, can't identify the cards unless we refetch the data
   useEffect(() => {
     axios.get(`/api/boards/${id}`).then((response) => {
       const currentBoard = response.data[0];
-      console.log(currentBoard.board.columns);
-      if (currentBoard.length === 0) {
+      if (!currentBoard) {
         setColumns([]);
       } else {
         setColumns(currentBoard.board.columns);
       }
+
+      setBoardName(currentBoard.board.board_name);
     });
-    setCurrBoardID(id);
-  }, [counter]);
+  }, []);
 
-  // const handleDelete = () => {
-  //   console.log('axios deleted Board');
-  // }
-
-  // open up add Column modal form
-  const toggle = () => {
-    console.log('toggled Add Column Modal');
-    setShowColumnModal(!showColumnModal);
+  const handleDelete = () => {
+    console.log('axios deleted Board');
+    axios.delete(`/api/boards/delete`, {
+      data: {
+        id: id,
+      },
+    });
+    navigate('/');
   };
+
   // render array of column objects prop drilling column info
   const renderColumns = columns.map((columnObj) => (
     <Column
@@ -92,14 +89,12 @@ const Board = () => {
       column={columnObj}
       setColumns={setColumns}
       setCounter={setCounter}
+      counter={counter}
     />
   ));
 
-  // console.log(columns);
-
   const onDragEnd = (result) => {
     const { source, destination } = result;
-
     if (!destination) return;
     if (
       destination.droppableId === source.droppableId &&
@@ -122,7 +117,9 @@ const Board = () => {
         landing = ele;
       }
     });
+
     const cardCopy = { ...beginning.cards[source.index] };
+
     //create a copy of the card
     setColumns((prevState) => {
       //copy previous state
@@ -136,16 +133,12 @@ const Board = () => {
       return copyState;
     });
 
-    let columnId = landing.column_id;
-    console.log(columnId);
-    axios
-      .patch(`/api/cards/moveCard`, {
-        id: cardCopy.card_id,
-        columnId: columnId,
-      })
-      .then(() => {
-        setCounter((prev) => ++prev);
-      });
+    const columnId = landing.column_id;
+
+    axios.patch(`/api/cards/moveCard`, {
+      id: cardCopy.card_id,
+      columnId: columnId,
+    });
   };
 
   // TODO board DELETE button
@@ -153,22 +146,29 @@ const Board = () => {
     <DragDropContext onDragEnd={onDragEnd}>
       <div className='column-container'>
         <div>
-          <input type='text' />
+          <input
+            type='text'
+            value={boardName}
+            onChange={(e) => setBoardName(e.target.value)}
+          />
           <button>Save</button>
-          <button>Delete</button>
+          <button onClick={handleDelete}>Delete</button>
         </div>
         <div className='modal-box'>
           {showColumnModal && (
             <ColumnModal
               setShowColumnModal={setShowColumnModal}
               setColumns={setColumns}
-              setCounter={setCounter}
+              boardId={id}
             />
           )}
         </div>
         {renderColumns}
         <div>
-          <button className='addColumn' onClick={toggle}>
+          <button
+            className='addColumn'
+            onClick={() => setShowColumnModal(true)}
+          >
             ADD COLUMN
           </button>
         </div>

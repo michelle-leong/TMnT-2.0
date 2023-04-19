@@ -8,32 +8,28 @@ import SignUpPage from './pages/SignUpPage.jsx';
 import HomePage from './pages/HomePage.jsx';
 import UserContext from './context/UserContext.jsx';
 import BoardPage from './pages/BoardPage.jsx';
-import BoardContext from './context/BoardContext.jsx';
 
 //user: testing
 //password: testing1
 
 const App = () => {
   const [user, setUser] = useState({
+    // null
     id: 18,
     username: 'testing',
     first_name: 'test',
     last_name: 'test',
   });
-  const [currBoardID, setCurrBoardID] = useState(null);
-  // console.log(user);
   return (
     <UserContext.Provider value={{ user, setUser }}>
-      <BoardContext.Provider value={{ currBoardID, setCurrBoardID }}>
-        <Router>
-          <Routes>
-            {/* <Route path='/' element={<LoginPage />} />
-          <Route path='/signup' element={<SignUpPage />} /> */}
-            <Route path='/' element={<HomePage />} />
-            <Route path='/boards/:id' element={<BoardPage />} />
-          </Routes>
-        </Router>
-      </BoardContext.Provider>
+      <Router>
+        <Routes>
+          <Route path='/' element={<LoginPage />} />
+          <Route path='/signup' element={<SignUpPage />} />
+          <Route path='/home' element={<HomePage />} />
+          <Route path='/boards/:id' element={<BoardPage />} />
+        </Routes>
+      </Router>
     </UserContext.Provider>
   );
 };

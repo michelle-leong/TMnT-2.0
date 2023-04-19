@@ -1,13 +1,12 @@
-import React, { Component, useState } from 'react';
+import React, { useState } from 'react';
 import { Draggable } from 'react-beautiful-dnd';
 import { UpdateCardModal } from './Modals.jsx';
 import axios from 'axios';
 
-export default function Card({ card, setCards, dropIndex, setCounter }) {
-  const { card_id, card_task, column_id } = card;
+const Card = ({ card, dropIndex, setColumns, columnId }) => {
+  const { card_id, card_task } = card;
 
   const [showUpdateCardModal, setShowUpdateCardModal] = useState(false);
-
   const handleDelete = () => {
     axios
       .delete(`/api/cards/delete`, {
@@ -15,31 +14,23 @@ export default function Card({ card, setCards, dropIndex, setCounter }) {
       })
       .then((response) => {
         if (response.status === 200) {
-          setCards((cardsState) => {
-            const newState = cardsState.map((obj) => ({ ...obj }));
-            const index = newState.findIndex(
-              (cardObj) => cardObj.card_id === card_id
+          setColumns((prevState) => {
+            const stateCopy = prevState.slice();
+            const columnIndex = stateCopy.findIndex(
+              (column) => column.column_id === columnId
             );
-            newState.splice(index, 1);
-            console.log(newState);
-            return newState;
+            const column = stateCopy[columnIndex];
+
+            const cardIndex = column.cards.findIndex(
+              (card) => card.card_id === card_id
+            );
+            column.cards.splice(cardIndex, 1);
+            return stateCopy;
           });
         }
       });
-    setCounter((prev) => ++prev);
   };
 
-  // open up update card modal form
-  const toggle = () => {
-    setShowUpdateCardModal(!showUpdateCardModal);
-  };
-  /**
-   * useEffect after the a card is created updated deleted
-   * to re render the cards
-   */
-
-  /*className={`cards ${snapshot.isDragging ? "drag" : ""}`*/
-  // maybe in the Draggable code need to add task={task}??
   return (
     <Draggable key={card_id} draggableId={card_id.toString()} index={dropIndex}>
       {(provided, snapshot) => (
@@ -54,15 +45,18 @@ export default function Card({ card, setCards, dropIndex, setCounter }) {
               <UpdateCardModal
                 card_id={card_id}
                 setShowUpdateCardModal={setShowUpdateCardModal}
-                setCards={setCards}
-                columnId={column_id}
-                setCounter={setCounter}
+                columnId={columnId}
+                setColumns={setColumns}
+                cardTask={card_task}
               />
             )}
           </div>
           <p>{card_task}</p>
           <div className='modal-button-cont'>
-            <button className='btn' onClick={toggle}>
+            <button
+              className='btn'
+              onClick={() => setShowUpdateCardModal(true)}
+            >
               Update
             </button>
             <button className='btn' onClick={handleDelete}>
@@ -73,4 +67,6 @@ export default function Card({ card, setCards, dropIndex, setCounter }) {
       )}
     </Draggable>
   );
-}
+};
+
+export default Card;

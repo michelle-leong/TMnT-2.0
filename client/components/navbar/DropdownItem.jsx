@@ -1,15 +1,11 @@
 import React, { useState, useContext } from 'react';
-import BoardContext from '../../context/BoardContext.jsx';
 
-function DropdownItem({ boardID, boardName, close }) {
-  const { currBoardID, setCurrBoardID } = useContext(BoardContext);
-
+function DropdownItem({ boardName, close }) {
   return (
     <li>
       <button
         className='dropdown-link'
         onClick={() => {
-          setCurrBoardID(boardID);
           close();
           // console.log(currBoardID)
         }}
