@@ -7,6 +7,8 @@ const Card = ({ card, dropIndex, setColumns, columnId }) => {
   const { card_id, card_task } = card;
 
   const [showUpdateCardModal, setShowUpdateCardModal] = useState(false);
+
+  //handle deleting cards
   const handleDelete = () => {
     axios
       .delete(`/api/cards/delete`, {
@@ -34,12 +36,25 @@ const Card = ({ card, dropIndex, setColumns, columnId }) => {
   return (
     <Draggable key={card_id} draggableId={card_id.toString()} index={dropIndex}>
       {(provided, snapshot) => (
-        <div
-          className='card card-content-container'
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-          ref={provided.innerRef}
-        >
+        <div className='card card-content-container'>
+          <div
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            ref={provided.innerRef}
+          >
+            <p>{card_task}</p>
+            <div className='modal-button-cont'>
+              <button
+                className='btn'
+                onClick={() => setShowUpdateCardModal(true)}
+              >
+                Update
+              </button>
+              <button className='btn' onClick={handleDelete}>
+                Delete
+              </button>
+            </div>
+          </div>
           <div className='modal-box'>
             {showUpdateCardModal && (
               <UpdateCardModal
@@ -50,18 +65,6 @@ const Card = ({ card, dropIndex, setColumns, columnId }) => {
                 cardTask={card_task}
               />
             )}
-          </div>
-          <p>{card_task}</p>
-          <div className='modal-button-cont'>
-            <button
-              className='btn'
-              onClick={() => setShowUpdateCardModal(true)}
-            >
-              Update
-            </button>
-            <button className='btn' onClick={handleDelete}>
-              Delete
-            </button>
           </div>
         </div>
       )}

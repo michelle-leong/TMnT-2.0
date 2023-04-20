@@ -93,9 +93,13 @@ const Board = () => {
     />
   ));
 
+  //logic to update state after moving a card
   const onDragEnd = (result) => {
+    //every drag and drop event has a source object and destination object
     const { source, destination } = result;
+    //if there is no destination object, return
     if (!destination) return;
+    //if destination and source are same, return
     if (
       destination.droppableId === source.droppableId &&
       destination.index === source.index
@@ -107,6 +111,7 @@ const Board = () => {
     let beginningIndex;
     let landingIndex;
 
+    //find the source and destination columns in state
     columns.forEach((ele, index) => {
       if (ele.column_id.toString() === source.droppableId) {
         beginning = ele;
@@ -118,9 +123,9 @@ const Board = () => {
       }
     });
 
+    //create a copy of the card
     const cardCopy = { ...beginning.cards[source.index] };
 
-    //create a copy of the card
     setColumns((prevState) => {
       //copy previous state
       const copyState = [...prevState];
@@ -135,13 +140,13 @@ const Board = () => {
 
     const columnId = landing.column_id;
 
+    //update card column in database
     axios.patch(`/api/cards/moveCard`, {
       id: cardCopy.card_id,
       columnId: columnId,
     });
   };
 
-  // TODO board DELETE button
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <div>

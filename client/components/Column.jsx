@@ -1,29 +1,10 @@
-import React, { Component } from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Card from './Card.jsx';
 import { CardModal } from './Modals.jsx';
 import { Droppable } from 'react-beautiful-dnd';
 import axios from 'axios';
 
 /**
- * {
- *     "cards": [
- *         {
- *             "card_id": 1,
- *             "card_task": "task updated again and again"
- *         },
- *         {
- *             "card_id": 5,
- *             "card_task": "its a task"
- *         },
- *         {
- *             "card_id": 6,
- *             "card_task": "its a task"
- *         }
- *     ],
- *     "column_id": 3,
- *     "column_name": "another testing column"
- * }
  */
 /**
  *
@@ -44,11 +25,13 @@ const Column = ({ column, setColumns }) => {
   const [showCardModal, setShowCardModal] = useState(false);
   const [cardArray, setCards] = useState([]);
 
+  //if column is empty, set an empty card array (query to database doesn't return empty array);
   useEffect(() => {
     if (!Array.isArray(cards)) setCards([]);
     else setCards(cards);
   }, []);
 
+  //deleting column
   const handleDelete = () => {
     axios
       .delete(`/api/columns/delete`, {
@@ -79,16 +62,12 @@ const Column = ({ column, setColumns }) => {
     />
   ));
 
-  /**
-   * TODO column titles should be an input similar
-   * to the board title, so they can be changed and updated
-   */
   return (
     <Droppable key={column_id.toString()} droppableId={column_id.toString()}>
       {(provided) => (
         <div className='columnCont'>
           <div ref={provided.innerRef} {...provided.droppableProps}>
-            <div>{column_name}</div>
+            <h1>{column_name}</h1>
             <div className='cardCont'>
               {renderCards}
               {provided.placeholder}

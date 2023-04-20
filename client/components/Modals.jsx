@@ -11,18 +11,24 @@ import axios from 'axios';
 export const ColumnModal = ({ setShowColumnModal, setColumns, boardId }) => {
   const [name, setName] = useState('');
   const handleAdd = () => {
+    //object to send to database
     const newColumn = {
       name: name,
       board_id: boardId,
     };
+    if (name === '') {
+      setShowColumnModal(false);
+      return;
+    }
 
+    //post request to make new column
     axios
       .post('/api/columns/new', newColumn)
       .then((response) => {
         if (response.status !== 200) {
           throw new Error('Error caught when creating new column!!!');
         }
-
+        //update columns state with the new column
         setColumns((columnsState) => {
           const newState = columnsState.map((obj) => ({ ...obj }));
           newState.push({
@@ -50,7 +56,6 @@ export const ColumnModal = ({ setShowColumnModal, setColumns, boardId }) => {
         <input
           className='modal-input'
           type='text'
-          // required
           value={name}
           onChange={(e) => {
             setName(e.target.value);
@@ -83,16 +88,16 @@ export const CardModal = ({
 }) => {
   const [task, setTask] = useState('');
 
-  /**
-   * TODO error checking for empty strings
-   * they were using required but it doesn't
-   * function without a submit in the form
-   */
   const handleAdd = () => {
     const newCard = {
       task,
       columnId,
     };
+
+    if (task === '') {
+      setShowCardModal(false);
+      return;
+    }
 
     axios
       .post('/api/cards/create', newCard)
