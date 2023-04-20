@@ -144,15 +144,23 @@ const Board = () => {
   // TODO board DELETE button
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className='column-container'>
-        <div>
-          <input
-            type='text'
-            value={boardName}
-            onChange={(e) => setBoardName(e.target.value)}
-          />
-          <button>Save</button>
-          <button onClick={handleDelete}>Delete</button>
+      <div>
+        <div className='board'>
+          <div id='board-name'>
+            <input
+              type='text'
+              value={boardName}
+              onChange={(e) => setBoardName(e.target.value)}
+            />
+            <button>Save</button>
+            <button onClick={handleDelete}>Delete</button>
+          </div>
+          <div id='column-container'>
+            {renderColumns}
+            <button id='add-column' onClick={() => setShowColumnModal(true)}>
+              Add Column
+            </button>
+          </div>
         </div>
         <div className='modal-box'>
           {showColumnModal && (
@@ -162,15 +170,6 @@ const Board = () => {
               boardId={id}
             />
           )}
-        </div>
-        {renderColumns}
-        <div>
-          <button
-            className='addColumn'
-            onClick={() => setShowColumnModal(true)}
-          >
-            ADD COLUMN
-          </button>
         </div>
       </div>
     </DragDropContext>

@@ -14,13 +14,17 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+  h1 {
+    font-size: 1.5rem;
+    text-align: center;
+  }
 }
 
-.modal-column-input {
-  width: 150px;
-  height: 20px;
+.modal-input {
+  font-size: 1rem;
+  padding: 3px 2px;
   border-radius: 5px;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   background-color: $color2;
 }
 
@@ -28,6 +32,12 @@
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  width: 105px;
+}
+
+.modal-text-button:hover {
+  cursor: pointer;
+  background-color: $color5;
 }
 
 .modal-button-cont {

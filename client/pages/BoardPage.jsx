@@ -7,9 +7,8 @@ const BoardPage = () => {
   const { user, setUser } = useContext(UserContext);
 
   return (
-    <div>
+    <div id='board-page'>
       <Navbar />
-
       <Board />
     </div>
   );

@@ -13,41 +13,12 @@
 
 .navbar-nav {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
   list-style-type: none;
   margin: 0;
   padding: 0;
-}
-
-.nav-item {
-  margin-right: 1rem;
-  position: relative;
-}
-
-.nav-item a {
-  display: flex;
-  align-items: center;
-  padding: 1rem;
-  text-decoration: none;
-  color: white;
-}
-
-.nav-item a:hover {
-  background-color: $color2;
-}
-
-.active {
-  background-color: $color1;
-}
-
-input[type="text"] {
-  flex: 1;
-  margin: 0 1rem;
-  padding: 0.5rem;
-  border: none;
-  border-radius: 5px;
-  background-color: $color4;
-  color: black;
-  font-size: 1.2rem;
+  width: 100%;
 }
 
 .dropdown {
@@ -67,21 +38,4 @@ input[type="text"] {
   background-color: $color1;
   box-shadow: 0px 8px 16px 0px $color1;
   border-radius: 5px;
-}
-
-.dropdown-menu-list {
-  margin: 0;
-  padding: 0;
-}
-
-.dropdown-link {
-  display: block;
-  padding: 0.5rem;
-  text-decoration: none;
-  color: $color4;
-  font-weight: normal;
-}
-
-.dropdown-link:hover {
-  background-color: $color3;
 }

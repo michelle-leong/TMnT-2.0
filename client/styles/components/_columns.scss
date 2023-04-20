@@ -7,17 +7,12 @@
   color: $color3;
   border-radius: 15px;
   padding: 10px;
-  gap: 10px;
-  // width: 175px;
-}
-
-.column-container {
-  display: flex;
-  gap: 10px;
+  margin: 0 10px;
 }
 
 .cardCont {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  // gap: 10px;
+  margin: 10px 0; 
 }

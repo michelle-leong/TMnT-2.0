@@ -23,14 +23,20 @@ const NewBoardModal = ({ setUserBoards, setShowModal }) => {
   };
 
   return (
-    <div>
-      <label>Board Name: </label>
-      <input
-        type='text'
-        value={boardName}
-        onChange={(e) => setBoardName(e.target.value)}
-      />
-      <button onClick={handleSubmit}>Submit</button>
+    <div className='modal-home'>
+      <form className='modal-form'>
+        <h1>Board Name: </h1>
+        <input
+          className='modal-input'
+          type='text'
+          value={boardName}
+          onChange={(e) => setBoardName(e.target.value)}
+        />
+        <div className='modal-button-cont'>
+          <button onClick={handleSubmit}>Submit</button>
+          <button onClick={() => setShowModal(false)}>Cancel</button>
+        </div>
+      </form>
     </div>
   );
 };

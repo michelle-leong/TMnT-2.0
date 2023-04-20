@@ -48,7 +48,7 @@ export const ColumnModal = ({ setShowColumnModal, setColumns, boardId }) => {
       <form className='modal-form'>
         <h1>ADD COLUMN</h1>
         <input
-          className='modal-column-input'
+          className='modal-input'
           type='text'
           // required
           value={name}
@@ -129,7 +129,7 @@ export const CardModal = ({
       <form className='modal-form'>
         <h1>ADD CARD</h1>
         <input
-          className='card-modal-input'
+          className='modal-input'
           type='text'
           value={task}
           onChange={(e) => setTask(e.target.value)}
@@ -213,7 +213,7 @@ export const UpdateCardModal = ({
       <form className='modal-form'>
         <h1>UPDATE CARD</h1>
         <input
-          className='card-modal-input'
+          className='modal-input'
           type='text'
           value={task}
           onChange={(e) => setTask(e.target.value)}

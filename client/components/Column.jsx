@@ -86,11 +86,22 @@ const Column = ({ column, setColumns }) => {
   return (
     <Droppable key={column_id.toString()} droppableId={column_id.toString()}>
       {(provided) => (
-        <div
-          className='columnCont'
-          ref={provided.innerRef}
-          {...provided.droppableProps}
-        >
+        <div className='columnCont'>
+          <div ref={provided.innerRef} {...provided.droppableProps}>
+            <div>{column_name}</div>
+            <div className='cardCont'>
+              {renderCards}
+              {provided.placeholder}
+            </div>
+            <div className='modal-button-cont'>
+              <button className='btn' onClick={() => setShowCardModal(true)}>
+                Add Card
+              </button>
+              <button className='btn' onClick={handleDelete}>
+                Delete Column
+              </button>
+            </div>
+          </div>
           <div className='modal-box'>
             {showCardModal && (
               <CardModal
@@ -101,19 +112,6 @@ const Column = ({ column, setColumns }) => {
                 setColumns={setColumns}
               />
             )}
-          </div>
-          <div>{column_name}</div>
-          <div className='cardCont'>
-            {renderCards}
-            {provided.placeholder}
-          </div>
-          <div className='modal-button-cont'>
-            <button className='btn' onClick={() => setShowCardModal(true)}>
-              Add Card
-            </button>
-            <button className='btn' onClick={handleDelete}>
-              Delete Column
-            </button>
           </div>
         </div>
       )}
