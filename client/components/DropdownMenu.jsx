@@ -1,23 +1,28 @@
 import React, { useState, useContext } from 'react';
 import UserContext from '../context/UserContext.jsx';
+import { useNavigate } from 'react-router-dom';
 
-function DropdownMenu() {
+const DropdownMenu = () => {
   const [open, setOpen] = useState(false);
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
 
-  const handleProfileClick = () => {
-    setOpen(!open);
+  const navigate = useNavigate();
+
+  const logOut = () => {
+    sessionStorage.clear();
+    setUser(null);
+    navigate('/');
   };
 
   return (
     <div className='dropdown'>
-      <span className='profile-link' onClick={handleProfileClick}>
-        Welcome {user.first_name}!
+      <span className='profile-link' onClick={() => setOpen(!open)}>
+        Welcome {user ? user.first_name : null}!
       </span>
       {open && (
         <ul className='dropdown-menu'>
           <li>
-            <button className='logOut' onClick={() => props.setLogin(false)}>
+            <button className='logOut' onClick={logOut}>
               LOG OUT
             </button>
           </li>
@@ -25,6 +30,6 @@ function DropdownMenu() {
       )}
     </div>
   );
-}
+};
 
 export default DropdownMenu;

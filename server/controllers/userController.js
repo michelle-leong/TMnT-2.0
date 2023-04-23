@@ -37,7 +37,6 @@ userController.createUser = async (req, res, next) => {
     RETURNING *`;
     const response = await pool.query(queryString);
     res.locals.user = response.rows[0];
-    req.session.username = res.locals.user.username;
     return next();
   } catch (err) {
     return next({
@@ -56,9 +55,6 @@ userController.verifyUser = async (req, res, next) => {
 
     // ERROR HANDLING
     if (!username || !password) {
-      console.log(
-        'Error in userController.verifyUser: username and password must be provided'
-      );
       return next({
         log: 'userController.createUser: username and password must be provided',
         message: {
@@ -69,9 +65,7 @@ userController.verifyUser = async (req, res, next) => {
     const queryString = `SELECT * FROM users WHERE username = '${username}'`;
     const response = await pool.query(queryString);
     const queryResponse = response.rows;
-    console.log(queryResponse);
     if (queryResponse.length === 0) {
-      console.log('no user match');
       return next({
         log: 'userController.createUser',
         message: {
@@ -89,8 +83,10 @@ userController.verifyUser = async (req, res, next) => {
           },
         });
       } else {
-        res.locals.user = queryResponse[0];
-        req.session.username = res.locals.user.username;
+        res.locals.user = {
+          _id: queryResponse[0]._id,
+          first_name: queryResponse[0].first_name,
+        };
         return next();
       }
     });

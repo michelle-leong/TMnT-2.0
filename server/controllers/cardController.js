@@ -2,19 +2,12 @@ const pool = require('../models/userModel');
 
 const cardController = {};
 
-// cardController.getCard = async (req, res, next) => {
-//   try {
-//   } catch (err) {}
-// };
-
 cardController.createCard = async (req, res, next) => {
   try {
     const { task, columnId } = req.body;
-    console.log('CREATECARD, REQ.BODY:', req.body);
     const queryString = `INSERT INTO cards (task, column_id) 
     VALUES ('${task}', ${columnId}) RETURNING *`;
     const cardCreated = await pool.query(queryString);
-    console.log(cardCreated.rows[0]);
     res.locals.cardCreated = cardCreated.rows[0];
     return next();
   } catch (err) {
@@ -26,7 +19,6 @@ cardController.createCard = async (req, res, next) => {
 };
 
 cardController.updateCard = async (req, res, next) => {
-  console.log(req.body);
   try {
     const cardId = req.body.card_id;
     const newTask = req.body.task;

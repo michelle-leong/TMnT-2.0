@@ -3,13 +3,6 @@ const express = require('express');
 const cardController = require('../controllers/cardController');
 const router = express.Router();
 
-// confirm the body
-
-// res with cards per column id
-// router.post('/', cardController.getCard, (req, res) => {
-//   return res.status(200).send(res.locals.cards);
-// });
-
 // res with card created
 router.post('/create', cardController.createCard, (req, res) => {
   return res.status(200).json(res.locals.cardCreated);

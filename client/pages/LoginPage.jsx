@@ -4,33 +4,15 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function LoginPage() {
-  // useState for username, password
-  // loggedIn checked cookie/session id to bypass login page and redirects them to home page
-  // Navigate to /home endpoint
   const { user, setUser } = useContext(UserContext);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const refreshUser = JSON.parse(sessionStorage.getItem('user'));
 
   const navigate = useNavigate();
-  // check to see if user has session running
-  // useEffect(() => {
-  //   const sessionID = getCookie("sessionID");
-  //   if (sessionID) {
-  //     axios
-  //       .get(`/api/users/session/${sessionID}`)
-  //       .then((response) => {
-  //         setUser(response.data);
-  //         navigate("/home");
-  //       })
-  //       .catch((error) => {
-  //         console.log("Error checking session:", error);
-  //       });
-  //   }
-  // }, []);
 
   useEffect(() => {
-    if (user !== null) {
-      console.log('User context:', user);
+    if (user || refreshUser) {
       navigate('/home');
     }
   }, [user]);
@@ -46,11 +28,10 @@ function LoginPage() {
       })
       .then((res) => {
         const newUser = res.data;
-        console.log(newUser);
         setUser(newUser);
         setUsername('');
         setPassword('');
-        console.log(user);
+        sessionStorage.setItem('user', JSON.stringify(res.data));
       })
       .catch((error) => {
         console.log(error);
@@ -58,7 +39,6 @@ function LoginPage() {
       });
   };
 
-  //RENDER
   return (
     <div className='loginCont'>
       <div className='user-login-box'>

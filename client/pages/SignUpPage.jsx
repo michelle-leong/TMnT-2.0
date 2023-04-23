@@ -4,21 +4,23 @@ import UserContext from '../context/UserContext.jsx';
 import axios from 'axios';
 
 function SignUpPage() {
-  // same TODOs as login, instead navigate to '/'
   const { user, setUser } = useContext(UserContext); // from the UserContext state
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
 
+  //user from session storage
+  const refreshUser = JSON.parse(sessionStorage.getItem('user'));
+
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   if (user !== null) {
-  //     console.log(user);
-  //     navigate('/home');
-  //   }
-  // }, [user]);
+  //if user in session storage, go to home page
+  useEffect(() => {
+    if (user || refreshUser) {
+      navigate('/home');
+    }
+  }, [user]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -34,7 +36,9 @@ function SignUpPage() {
       })
       .then((response) => {
         setUser(response.data); // update user context with response data
-        // navigate('/home')
+        console.log(response.data);
+        sessionStorage.setItem('user', JSON.stringify(response.data));
+        navigate('/home');
         console.log('user created and logged in on signuppage.jsx');
       })
       .catch((error) => {

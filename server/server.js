@@ -1,7 +1,6 @@
 const path = require('path');
 const express = require('express');
 const cors = require('cors');
-// const genuuid = require('uuid');
 const UserRouter = require('./routes/UserRouter');
 const BoardRouter = require('./routes/BoardRouter');
 const ColumnRouter = require('./routes/ColumnRouter');
@@ -18,7 +17,7 @@ const PORT = process.env.PORT || 3000;
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(cookieParser());
+app.use(cookieParser('secret'));
 
 // enable ALL CORS requests
 app.use(cors());
@@ -27,42 +26,11 @@ app.use(cors());
 
 app.use('/build', express.static(path.resolve(__dirname, '../build')));
 
-// const currSession = {
-//   secret: 'supersecret',
-//   saveUninitialized: true,
-//   cookie: { maxAge: 120000, secure: false },
-//   resave: false,
-// };
-
-// app.set('trust proxy', 1);
-
-// app.use(sessions(currSession));
-
 // route handlers
 app.use('/api/users', UserRouter);
-
-// app.use('/api', (req, res, next) => {
-//   if (!req.session.username) {
-//     // res.redirect('/user/login');
-//     return next({
-//       log: 'no session found',
-//       message: { err: 'no session found' },
-//     });
-//   } else {
-//     return next();
-//   }
-// });
 app.use('/api/boards', BoardRouter);
 app.use('/api/columns', ColumnRouter);
 app.use('/api/cards', CardRouter);
-
-// app.get('/*', function (req, res) {
-//   res.sendFile(path.join(__dirname, '../build/index.html'), function (err) {
-//     if (err) {
-//       res.status(500).send(err);
-//     }
-//   });
-// });
 
 // server index.html
 app.get('/', (req, res) => {

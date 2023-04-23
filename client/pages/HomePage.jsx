@@ -5,20 +5,27 @@ import UserContext from '../context/UserContext.jsx';
 import BoardCard from '../components/BoardCard.jsx';
 import NewBoardModal from '../components/NewBoardModal.jsx';
 
+import { useNavigate } from 'react-router-dom';
+
 const HomePage = () => {
   const { user } = useContext(UserContext);
   const [userBoards, setUserBoards] = useState([]);
   const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
 
-  // console.log(user);
+  //make sure there is a user logged in that has permission to see boards
   useEffect(() => {
-    axios
-      .post('/api/users/getBoards', {
-        id: user.id,
-      })
-      .then((res) => {
-        setUserBoards(res.data);
-      });
+    if (!user) {
+      navigate('/');
+    } else {
+      axios
+        .post('/api/users/getBoards', {
+          id: user._id,
+        })
+        .then((res) => {
+          setUserBoards(res.data);
+        });
+    }
   }, []);
 
   const boardEle = userBoards.map((ele, idx) => {

@@ -3,7 +3,6 @@ const pool = require('../models/userModel');
 const columnController = {};
 
 columnController.addColumn = async (req, res, next) => {
-  console.log('req body', req.body);
   try {
     const boardId = req.body.board_id;
     const columnName = req.body.name;
@@ -24,7 +23,6 @@ columnController.updateColumn = async (req, res, next) => {
     const columnName = req.body.name;
     const queryString = `UPDATE columns SET name = '${columnName}' where _id = ${columnId} RETURNING *`;
     const response = await pool.query(queryString);
-    console.log(`column id ${columnId} is updated`);
     res.locals.columnUpdate = response.rows[0];
     return next();
   } catch (err) {
@@ -35,12 +33,10 @@ columnController.updateColumn = async (req, res, next) => {
   }
 };
 columnController.deleteColumn = async (req, res, next) => {
-  console.log('req body', req.body);
   try {
     const columnId = req.body.id;
     const queryString = `DELETE FROM columns where _id = ${columnId}`;
     await pool.query(queryString);
-    console.log(`column id ${columnId} deleted`);
     return next();
   } catch (err) {
     return next({

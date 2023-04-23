@@ -13,13 +13,7 @@ import BoardPage from './pages/BoardPage.jsx';
 //password: testing1
 
 const App = () => {
-  const [user, setUser] = useState({
-    // null
-    id: 18,
-    username: 'testing',
-    first_name: 'test',
-    last_name: 'test',
-  });
+  const [user, setUser] = useState(null);
   return (
     <UserContext.Provider value={{ user, setUser }}>
       <Router>
@@ -35,3 +29,5 @@ const App = () => {
 };
 
 export default App;
+
+//test2; test2

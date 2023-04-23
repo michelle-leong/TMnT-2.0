@@ -9,7 +9,7 @@ const NewBoardModal = ({ setUserBoards, setShowModal }) => {
   const handleSubmit = () => {
     axios
       .post('/api/boards/create', {
-        id: user.id,
+        id: user._id,
         name: boardName,
       })
       .then((res) => {

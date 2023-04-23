@@ -53,6 +53,7 @@ const Column = ({ column, setColumns }) => {
 
   const renderCards = cardArray.map((cardObj, index) => (
     <Card
+      key={index}
       dropIndex={index}
       id={cardObj._id}
       card={cardObj}

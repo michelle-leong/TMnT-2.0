@@ -6,54 +6,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Column from './Column.jsx';
 import { ColumnModal } from './Modals.jsx';
 
-// const a = [
-//   {
-//     board: {
-//       columns: [
-//         {
-//           cards: [
-//             {
-//               card_id: 4,
-//               card_task: 'its a task',
-//             },
-//           ],
-//           column_id: 2,
-//           column_name: 'testing columns',
-//         },
-//         {
-//           cards: [
-//             {
-//               card_id: 1,
-//               card_task: 'task updated again and again',
-//             },
-//             {
-//               card_id: 5,
-//               card_task: 'its a task',
-//             },
-//             {
-//               card_id: 6,
-//               card_task: 'its a task',
-//             },
-//           ],
-//           column_id: 3,
-//           column_name: 'another testing column',
-//         },
-//       ],
-//       board_id: 2,
-//       board_name: 'test board',
-//     },
-//   },
-// ];
-
-/*
- *
- * @param {props = {board : array[0].board = board object}} param0
- * @returns
- */
 const Board = () => {
   const [showColumnModal, setShowColumnModal] = useState(false);
   const [columns, setColumns] = useState([]);
-  const [counter, setCounter] = useState(1);
   const [boardName, setBoardName] = useState('');
   const [edit, setEdit] = useState(false);
 
@@ -62,19 +17,17 @@ const Board = () => {
 
   useEffect(() => {
     axios.get(`/api/boards/${id}`).then((response) => {
-      const currentBoard = response.data[0];
-      if (!currentBoard) {
+      const currentBoard = response.data[0].board;
+      if (currentBoard.columns[0].column_id === null) {
         setColumns([]);
       } else {
-        setColumns(currentBoard.board.columns);
+        setColumns(currentBoard.columns);
       }
-
-      setBoardName(currentBoard.board.board_name);
+      setBoardName(currentBoard.board_name);
     });
   }, []);
 
   const handleDelete = () => {
-    console.log('axios deleted Board');
     axios.delete(`/api/boards/delete`, {
       data: {
         id: id,
@@ -83,14 +36,20 @@ const Board = () => {
     navigate('/');
   };
 
+  const handleUpdate = () => {
+    axios.patch('/api/boards/update', {
+      id: id,
+      name: boardName,
+    });
+    setEdit(false);
+  };
+
   // render array of column objects prop drilling column info
   const renderColumns = columns.map((columnObj) => (
     <Column
       key={columnObj.column_id}
       column={columnObj}
       setColumns={setColumns}
-      setCounter={setCounter}
-      counter={counter}
     />
   ));
 
@@ -160,12 +119,12 @@ const Board = () => {
                   value={boardName}
                   onChange={(e) => setBoardName(e.target.value)}
                 />
-                <button>Save</button>
+                <button onClick={handleUpdate}>Save</button>
                 <button onClick={() => setEdit(false)}>Cancel</button>
               </div>
             ) : (
               <div>
-                <span>{boardName}</span>
+                <span id='board-title'>{boardName}</span>
                 <button onClick={() => setEdit(true)}>Edit</button>
                 <button onClick={handleDelete}>Delete</button>
               </div>
@@ -193,10 +152,3 @@ const Board = () => {
 };
 
 export default Board;
-
-// board should get all cols
-// cols should get all its cards
-// cards fill out with all their data
-
-// delete board -> delete all columns (single query)
-// delete column ->  delete all associated cards  (single query)

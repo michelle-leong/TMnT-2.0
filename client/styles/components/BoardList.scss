@@ -42,5 +42,6 @@
 #board-list-container {
   display: flex;
   flex-wrap: wrap;
-
+  min-width: 200px;
+  justify-content: center;
 }

@@ -1,34 +1,27 @@
 import React, { useState, useContext, useEffect } from 'react';
-import axios from 'axios';
 import UserContext from '../context/UserContext.jsx';
 import DropdownMenu from './DropdownMenu.jsx';
 import { useNavigate } from 'react-router-dom';
 
-const Navbar = ({ isDarkMode, setIsDarkMode }) => {
-  const { user } = useContext(UserContext);
-  const [boardList, setBoardList] = useState([]);
+const Navbar = () => {
+  const { setUser } = useContext(UserContext);
 
+  const refreshUser = JSON.parse(sessionStorage.getItem('user'));
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios
-      .post('/api/users/getBoards', { id: user.id })
-      .then((res) => {
-        const list = res.data;
-        setBoardList(list);
-      })
-      .catch((error) => console.error(error));
+    if (!refreshUser) {
+      navigate('/');
+    } else {
+      setUser(refreshUser);
+    }
   }, []);
-
-  // the boards mapped from the server
-
-  // show board 1 in currBoardId
 
   return (
     <nav className={`navbar`}>
       <ul className='navbar-nav'>
         <li>
-          <button onClick={() => navigate('/')}>Home</button>
+          <button onClick={() => navigate('/home')}>Home</button>
         </li>
         <DropdownMenu />
       </ul>
