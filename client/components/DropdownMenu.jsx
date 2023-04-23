@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
 import UserContext from '../context/UserContext.jsx';
 
-function DropdownMenu({ boardList }) {
+function DropdownMenu() {
   const [open, setOpen] = useState(false);
   const { user } = useContext(UserContext);
 

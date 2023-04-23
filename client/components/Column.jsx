@@ -65,8 +65,8 @@ const Column = ({ column, setColumns }) => {
   return (
     <Droppable key={column_id.toString()} droppableId={column_id.toString()}>
       {(provided) => (
-        <div className='columnCont'>
-          <div ref={provided.innerRef} {...provided.droppableProps}>
+        <div ref={provided.innerRef} {...provided.droppableProps}>
+          <div className='columnCont'>
             <h1>{column_name}</h1>
             <div className='cardCont'>
               {renderCards}

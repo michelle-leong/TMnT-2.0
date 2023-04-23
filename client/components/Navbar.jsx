@@ -30,7 +30,7 @@ const Navbar = ({ isDarkMode, setIsDarkMode }) => {
         <li>
           <button onClick={() => navigate('/')}>Home</button>
         </li>
-        <DropdownMenu boardList={boardList} />
+        <DropdownMenu />
       </ul>
     </nav>
   );

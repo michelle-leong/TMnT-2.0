@@ -65,7 +65,6 @@ cardController.moveCard = async (req, res, next) => {
   try {
     const cardId = req.body.id;
     const newColumnId = req.body.columnId;
-    console.log('Move Card: REQ.BODY:', req.body);
     // query to delete card per id
     const queryString = `UPDATE cards
     SET column_id = ${newColumnId}

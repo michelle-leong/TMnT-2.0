@@ -55,6 +55,7 @@ const Board = () => {
   const [columns, setColumns] = useState([]);
   const [counter, setCounter] = useState(1);
   const [boardName, setBoardName] = useState('');
+  const [edit, setEdit] = useState(false);
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -152,13 +153,23 @@ const Board = () => {
       <div>
         <div className='board'>
           <div id='board-name'>
-            <input
-              type='text'
-              value={boardName}
-              onChange={(e) => setBoardName(e.target.value)}
-            />
-            <button>Save</button>
-            <button onClick={handleDelete}>Delete</button>
+            {edit ? (
+              <div>
+                <input
+                  type='text'
+                  value={boardName}
+                  onChange={(e) => setBoardName(e.target.value)}
+                />
+                <button>Save</button>
+                <button onClick={() => setEdit(false)}>Cancel</button>
+              </div>
+            ) : (
+              <div>
+                <span>{boardName}</span>
+                <button onClick={() => setEdit(true)}>Edit</button>
+                <button onClick={handleDelete}>Delete</button>
+              </div>
+            )}
           </div>
           <div id='column-container'>
             {renderColumns}

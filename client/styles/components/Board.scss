@@ -9,6 +9,8 @@
 #column-container {
   display: flex;
   margin-top: 20px;
+
+ 
 }
 
 #board-name {
@@ -34,4 +36,9 @@
 #add-column:hover {
   cursor: pointer;
   background-color: $color5;
+}
+
+
+#board-container {
+  
 }

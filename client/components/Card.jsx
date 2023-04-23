@@ -36,11 +36,12 @@ const Card = ({ card, dropIndex, setColumns, columnId }) => {
   return (
     <Draggable key={card_id} draggableId={card_id.toString()} index={dropIndex}>
       {(provided, snapshot) => (
-        <div className='card card-content-container'>
+        <div className='card-content-container'>
           <div
             {...provided.draggableProps}
             {...provided.dragHandleProps}
             ref={provided.innerRef}
+            className='card'
           >
             <p>{card_task}</p>
             <div className='modal-button-cont'>
