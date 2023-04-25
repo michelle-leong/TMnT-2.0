@@ -24,7 +24,7 @@ npm run dev
 Please make your own .env file and fill it with your own PostgreSQL database URI:
 
 ```
-DB_URI=<YOUR_DB_KEY>
+DB_URI=<YOUR_DB_URI>
 ```
 
 Make sure to create a database using the user-create.sql file with your own URI!
