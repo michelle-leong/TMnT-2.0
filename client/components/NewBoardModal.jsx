@@ -13,7 +13,7 @@ const NewBoardModal = ({ setUserBoards, setShowModal }) => {
         name: boardName,
       })
       .then((res) => {
-        console.log(res.data);
+  
         setUserBoards((prev) => {
           return [...prev, res.data];
         });

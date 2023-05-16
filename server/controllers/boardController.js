@@ -1,33 +1,30 @@
-// const Board = require('../models/boardModel');
-// const mongoose = require('mongoose');
 const pool = require('../models/userModel');
 
 const boardController = {};
 
-// create a Board
-
+// create a board for user, return to frontend
 boardController.createBoard = async (req, res, next) => {
   try {
-    const boardName = req.body.name; //or req.params.board
+    const boardName = req.body.name;
     const queryString = `INSERT INTO boards (name) VALUES ('${boardName}') RETURNING *`;
     const response = await pool.query(queryString);
     res.locals.board = response.rows[0];
     return next();
   } catch (err) {
     return next({
-      log: 'error in boardController.createBoard',
+      log: 'error in boardController.createBoard ' + err,
       message: { err: 'ERROR in boardController.createBoard' + err },
     });
   }
 };
 
+//update a board's name based on id
 boardController.updateBoard = async (req, res, next) => {
   try {
     const boardId = req.body.id;
     const boardName = req.body.name;
     const queryString = `UPDATE boards SET name = '${boardName}' WHERE _id = ${boardId} RETURNING *`;
-    const updatedBoard = await pool.query(queryString);
-    res.locals.updatedBoard = updatedBoard.rows[0];
+    await pool.query(queryString);
     return next();
   } catch (err) {
     return next({
@@ -37,6 +34,7 @@ boardController.updateBoard = async (req, res, next) => {
   }
 };
 
+//delete a board
 boardController.deleteBoard = async (req, res, next) => {
   try {
     const boardId = req.body.id;
@@ -45,27 +43,28 @@ boardController.deleteBoard = async (req, res, next) => {
   } catch (err) {
     return next({
       log: 'error in boardController.deleteBoard ' + err,
-      message: { err: 'ERROR in boardController.deleteBoard' + err },
+      message: { err: 'ERROR in boardController.deleteBoard ' + err },
     });
   }
 };
 
+//create a new row in the join table to connect users to boards they own
 boardController.joinUsernBoard = async (req, res, next) => {
   try {
     const userId = req.body.id;
     const boardId = res.locals.board._id;
-    const queryString = `INSERT INTO users_boards (user_id, board_id)
-    VALUES (${userId}, ${boardId})`;
+    const queryString = `INSERT INTO users_boards (user_id, board_id) VALUES (${userId}, ${boardId})`;
     await pool.query(queryString);
     return next();
   } catch (err) {
     return next({
-      log: 'error in boardController.joinUsernBoard',
-      message: { err: 'boardController.joinUsernBoard' + err },
+      log: 'error in boardController.joinUsernBoard ' + err,
+      message: { err: 'boardController.joinUsernBoard ' + err },
     });
   }
 };
 
+//return a json object of a board's columns and cards based on board id
 boardController.getBoard = async (req, res, next) => {
   try {
     const id = req.params.id;
@@ -100,12 +99,12 @@ boardController.getBoard = async (req, res, next) => {
       GROUP BY b._id;`;
 
     const response = await pool.query(queryString);
-    res.locals.board = response.rows;
+    res.locals.board = response.rows[0];
     return next();
   } catch (err) {
     return next({
-      log: 'error in boardController.getBoards' + err,
-      message: { err: `boardController.getBoards ${err}` },
+      log: 'error in boardController.getBoards ' + err,
+      message: { err: 'boardController.getBoards ' + err },
     });
   }
 };

@@ -23,7 +23,7 @@ export const ColumnModal = ({ setShowColumnModal, setColumns, boardId }) => {
 
     //post request to make new column
     axios
-      .post('/api/columns/new', newColumn)
+      .post('/api/columns/create', newColumn)
       .then((response) => {
         if (response.status !== 200) {
           throw new Error('Error caught when creating new column!!!');

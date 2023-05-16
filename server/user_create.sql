@@ -1,7 +1,7 @@
 -- create the tables
 -- default is the public schema 
 -- 
--- psql -d postgres://zgnmchem:O-Yfyi4tnIrjfpg4-uaAgSIrKIihx59g@kashin.db.elephantsql.com/zgnmchem -f user_create.sql
+-- psql -d <POSTGRES URI> -f user_create.sql
 -- CREATE TABLE products ( ... ); === CREATE TABLE public.products ( ... );
 
 SET statement_timeout = 0;

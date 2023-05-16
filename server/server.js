@@ -23,7 +23,6 @@ app.use(cookieParser('secret'));
 app.use(cors());
 
 // handle requests for static files (bundle.js)
-
 app.use('/build', express.static(path.resolve(__dirname, '../build')));
 
 // route handlers

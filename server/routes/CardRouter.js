@@ -3,21 +3,22 @@ const express = require('express');
 const cardController = require('../controllers/cardController');
 const router = express.Router();
 
-// res with card created
+//create a card
 router.post('/create', cardController.createCard, (req, res) => {
   return res.status(200).json(res.locals.cardCreated);
 });
 
-// // res with card updated
+//update a card's task
 router.patch('/update', cardController.updateCard, (req, res) => {
-  return res.status(200).json(res.locals.cardUpdated);
+  return res.status(200).json('updated card task');
 });
 
+//update card's column
 router.patch('/moveCard', cardController.moveCard, (req, res) => {
-  return res.status(200).json(res.locals.movedCard);
+  return res.status(200).json('updated card column');
 });
 
-// // // res with message 'card deleted'
+//delete a card
 router.delete('/delete', cardController.deleteCard, (req, res) => {
   return res.status(200).send('card deleted');
 });

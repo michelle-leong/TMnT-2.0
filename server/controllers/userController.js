@@ -6,20 +6,21 @@ const SALT_WORK_FACTOR = 10;
 const userController = {};
 
 // Create new user
-// when new user is created, send them to createBoard
 userController.createUser = async (req, res, next) => {
   try {
     const { username, password, firstName, lastName } = req.body;
 
+    //no username or password
     if (!username || !password) {
       return next({
-        log: 'userController.createUser',
+        log: 'userController.createUser: username and password must be provided',
         message: {
           err: 'userController.createUser: username and password must be provided',
         },
       });
     }
 
+    //check if there is a user with corresponding username
     const checkUser = `SELECT username FROM users WHERE username = '${username}'`;
     const checkUserQuery = await pool.query(checkUser);
     if (checkUserQuery.rows.length) {
@@ -31,6 +32,7 @@ userController.createUser = async (req, res, next) => {
       });
     }
 
+    //create the new user in database and hash password with bcrypt
     const hashedPassword = await bcrypt.hash(password, SALT_WORK_FACTOR);
     const queryString = `INSERT INTO users (username, password, first_name, last_name) 
     VALUES ('${username}', '${hashedPassword}', '${firstName}', '${lastName}') 
@@ -40,9 +42,9 @@ userController.createUser = async (req, res, next) => {
     return next();
   } catch (err) {
     return next({
-      log: 'ERROR in userController.createUser' + err,
+      log: 'ERROR in userController.createUser ' + err,
       message: {
-        err: 'userController.createUser' + err,
+        err: 'userController.createUser ' + err,
       },
     });
   }
@@ -53,7 +55,7 @@ userController.verifyUser = async (req, res, next) => {
   try {
     const { username, password } = req.body;
 
-    // ERROR HANDLING
+    // no username or password provided
     if (!username || !password) {
       return next({
         log: 'userController.createUser: username and password must be provided',
@@ -62,6 +64,8 @@ userController.verifyUser = async (req, res, next) => {
         },
       });
     }
+
+    //check to see if there's a user with that username
     const queryString = `SELECT * FROM users WHERE username = '${username}'`;
     const response = await pool.query(queryString);
     const queryResponse = response.rows;
@@ -73,7 +77,8 @@ userController.verifyUser = async (req, res, next) => {
         },
       });
     }
-    // valid user
+
+    // validate user's password
     bcrypt.compare(password, queryResponse[0].password, (err, response) => {
       if (err) {
         return next({
@@ -83,6 +88,7 @@ userController.verifyUser = async (req, res, next) => {
           },
         });
       } else {
+        //only send back user and name to frontend
         res.locals.user = {
           _id: queryResponse[0]._id,
           first_name: queryResponse[0].first_name,
@@ -98,6 +104,7 @@ userController.verifyUser = async (req, res, next) => {
   }
 };
 
+//get all boards for logged in user
 userController.getBoards = async (req, res, next) => {
   try {
     const userId = req.body.id;
@@ -113,7 +120,7 @@ userController.getBoards = async (req, res, next) => {
     return next({
       log: 'error in userController.getBoards ' + err,
       message: {
-        err: 'userController.getBoards' + err,
+        err: 'userController.getBoards ' + err,
       },
     });
   }

@@ -17,7 +17,7 @@ const Board = () => {
 
   useEffect(() => {
     axios.get(`/api/boards/${id}`).then((response) => {
-      const currentBoard = response.data[0].board;
+      const currentBoard = response.data.board;
       if (currentBoard.columns[0].column_id === null) {
         setColumns([]);
       } else {

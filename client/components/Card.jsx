@@ -35,7 +35,7 @@ const Card = ({ card, dropIndex, setColumns, columnId }) => {
 
   return (
     <Draggable key={card_id} draggableId={card_id.toString()} index={dropIndex}>
-      {(provided, snapshot) => (
+      {(provided) => (
         <div className='card-content-container'>
           <div
             {...provided.draggableProps}

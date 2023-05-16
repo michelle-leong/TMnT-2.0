@@ -1,20 +1,15 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import UserContext from '../context/UserContext.jsx';
 import DropdownMenu from './DropdownMenu.jsx';
 import { useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
-  const { setUser } = useContext(UserContext);
+  const { user } = useContext(UserContext);
 
-  const refreshUser = JSON.parse(sessionStorage.getItem('user'));
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!refreshUser) {
-      navigate('/');
-    } else {
-      setUser(refreshUser);
-    }
+    if (!user) navigate('/');
   }, []);
 
   return (

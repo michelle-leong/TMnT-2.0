@@ -2,6 +2,7 @@ const pool = require('../models/userModel');
 
 const cardController = {};
 
+//create a card and add to a column, return new card data to frontend
 cardController.createCard = async (req, res, next) => {
   try {
     const { task, columnId } = req.body;
@@ -12,63 +13,56 @@ cardController.createCard = async (req, res, next) => {
     return next();
   } catch (err) {
     return next({
-      log: 'error in cardController.createCard',
+      log: 'error in cardController.createCard ' + err,
       message: { err: 'ERROR in cardController.createCard' + err },
     });
   }
 };
 
+//update a card task based on id
 cardController.updateCard = async (req, res, next) => {
   try {
     const cardId = req.body.card_id;
     const newTask = req.body.task;
-    const queryString = `UPDATE cards
-    SET task = '${newTask}'
-    WHERE _id = ${cardId} RETURNING *`;
-    const cardUpdated = await pool.query(queryString);
-    // TODO: check cardUpdated's value
-    res.locals.cardUpdated = cardUpdated.rows[0];
+    const queryString = `UPDATE cards SET task = '${newTask}' WHERE _id = ${cardId} RETURNING *`;
+    await pool.query(queryString);
     return next();
   } catch (err) {
     return next({
-      log: 'error in cardController.updateCard',
+      log: 'error in cardController.updateCard ' + err,
       message: { err: 'ERROR in cardController.updateCard' + err },
     });
   }
 };
 
+//delete a card based on card id
 cardController.deleteCard = async (req, res, next) => {
   try {
     const cardId = req.body.id;
-    // query to delete card per id
     const queryString = `DELETE FROM cards
     WHERE _id = ${cardId}`;
     await pool.query(queryString);
     return next();
   } catch (err) {
     return next({
-      log: 'error in cardController.deleteCard',
+      log: 'error in cardController.deleteCard ' + err,
       message: { err: 'ERROR in cardController.deleteCard' + err },
     });
   }
 };
 
+//change column of a card
 cardController.moveCard = async (req, res, next) => {
   try {
     const cardId = req.body.id;
     const newColumnId = req.body.columnId;
-    // query to delete card per id
-    const queryString = `UPDATE cards
-    SET column_id = ${newColumnId}
-    WHERE _id = ${cardId} RETURNING *`;
-    const movedCard = await pool.query(queryString);
-
-    res.locals.movedCard = movedCard.rows[0];
+    const queryString = `UPDATE cards SET column_id = ${newColumnId} WHERE _id = ${cardId} RETURNING *`;
+    await pool.query(queryString);
     return next();
   } catch (err) {
     return next({
-      log: 'error in cardController.moveCard' + err,
-      message: { err: 'ERROR in cardController.moveCard' + err },
+      log: 'error in cardController.moveCard ' + err,
+      message: { err: 'ERROR in cardController.moveCard ' + err },
     });
   }
 };

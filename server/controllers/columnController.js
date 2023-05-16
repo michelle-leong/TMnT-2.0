@@ -2,6 +2,7 @@ const pool = require('../models/userModel');
 
 const columnController = {};
 
+//create a new column and return to frontend
 columnController.addColumn = async (req, res, next) => {
   try {
     const boardId = req.body.board_id;
@@ -17,21 +18,24 @@ columnController.addColumn = async (req, res, next) => {
     });
   }
 };
+
+//update column name;
 columnController.updateColumn = async (req, res, next) => {
   try {
     const columnId = req.body.id;
     const columnName = req.body.name;
     const queryString = `UPDATE columns SET name = '${columnName}' where _id = ${columnId} RETURNING *`;
-    const response = await pool.query(queryString);
-    res.locals.columnUpdate = response.rows[0];
+    await pool.query(queryString);
     return next();
   } catch (err) {
     return next({
-      log: 'columnController.updateColumn',
+      log: 'columnController.updateColumn ' + err,
       message: { err: 'ERROR in columnController.updateColumn' },
     });
   }
 };
+
+//delete column;
 columnController.deleteColumn = async (req, res, next) => {
   try {
     const columnId = req.body.id;
@@ -40,8 +44,8 @@ columnController.deleteColumn = async (req, res, next) => {
     return next();
   } catch (err) {
     return next({
-      log: 'columnController.deleteColumn' + err,
-      message: { err: 'ERROR in columnController.deleteColumn' },
+      log: 'columnController.deleteColumn ' + err,
+      message: { err: 'ERROR in columnController.deleteColumn ' + err },
     });
   }
 };
